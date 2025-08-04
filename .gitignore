@@ -1,0 +1,19 @@
+# environment
+.env
+
+# config
+src/config.js
+
+# dependencies
+node_modules/
+
+# logs
+logs/*
+!logs/error.log
+!logs/combined.log
+
+# .enigma
+.enigma/
+
+# other
+UPDATE.txt

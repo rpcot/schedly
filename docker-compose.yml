@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  rasp-api:
+    image: raspisssanie
+    container_name: rasp-api
+    env_file:
+      - .env
+    environment:
+      - NODE_APP=api
+    ports:
+      - "127.0.0.1:4444:4444"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  rasp-bot:
+    image: raspisssanie
+    container_name: rasp-bot
+    env_file:
+      - .env
+    environment:
+      - NODE_APP=bot
+    volumes:
+      - ./logs:/app/logs
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
