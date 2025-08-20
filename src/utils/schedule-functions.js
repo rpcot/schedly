@@ -27,7 +27,6 @@ function getWeekDate(difference = 0) {
     mondayDate.setHours(0, 0, 0, 0);
     mondayDate.setDate(mondayDate.getDate() - mondayDate.getDay() + 1);
 
-
     if (difference !== 0) {
         let differenceModule = Math.abs(difference);
         for (; differenceModule > 0; differenceModule--) {
@@ -42,8 +41,6 @@ function getWeekDate(difference = 0) {
     const sundayDate = new Date(mondayDate);
     sundayDate.setDate(mondayDate.getDate() + 6);
 
-    // const mondayDateString = mondayDate.toLocaleDateString('ru-RU').slice(0, 5);
-    // const sundayDateString = sundayDate.toLocaleDateString('ru-RU').slice(0, 5);
     const mondayDateString = mondayDate.toLocaleDateString('ru-RU');
     const sundayDateString = sundayDate.toLocaleDateString('ru-RU');
 
@@ -56,16 +53,15 @@ function getDayDates(difference = 0) {
     const { mondayDate } = getWeekDate(difference);
 
     const mondayDateString = mondayDate
-        .toLocaleDateString('ru-RU')
-        // .slice(0, 5);
+        .toLocaleDateString('ru-RU');
 
     const dayDates = [mondayDateString];
     for (let i = 0; i < 5; i++) {
         mondayDate.setDate(mondayDate.getDate() + 1);
 
         const dayDateString = mondayDate
-            .toLocaleDateString('ru-RU')
-            // .slice(0, 5);
+            .toLocaleDateString('ru-RU');
+
         dayDates.push(dayDateString);
     }
 
@@ -165,15 +161,19 @@ async function getDaySchedule(dayOfWeek, weekId) {
     return data;
 }
 
-async function createNewWeek(weekIndex) {
+async function createNewWeek(weekIndex, { defaultSchedule = false } = {}) {
     const bot = require('../index');
 
     const defaultLessonsSchedule = getDefaultLessonsSchedule();
 
-    const { weekDateString } = getWeekDate(weekIndex);
+    const weekDifference = (defaultSchedule)
+        ? weekIndex
+        : weekIndex - 1;
+
+    const { weekDateString } = getWeekDate(weekDifference);
     const week = await Weeks.create({ date: weekDateString, number: weekIndex + 1 });
 
-    const dayDates = getDayDates(weekIndex);
+    const dayDates = getDayDates(weekDifference);
 
     for (let dayIndex = 0; dayIndex < 6; dayIndex++) {
         const bellsType = (dayIndex === 5)
@@ -414,7 +414,7 @@ async function createDefaultSchedule() {
     bot.logger.info(`Создание стандартного расписания`);
 
     for (let weekIndex = 0; weekIndex < 3; weekIndex++) {
-        await createNewWeek(weekIndex)
+        await createNewWeek(weekIndex, { defaultSchedule: true });
     }
 
     bot.logger.info('Стандартное расписание создано');
@@ -428,7 +428,7 @@ async function rotateSchedule() {
 
     const lastWeek = await getLastWeek();
 
-    await createNewWeek(lastWeek.number);
+    await createNewWeek(lastWeek.number, { defaultSchedule: false });
 
     bot.logger.info('Обновление расписания завершено');
 
