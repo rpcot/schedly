@@ -1,0 +1,186 @@
+.bg-container {
+    background-color: rgb(18, 18, 18);
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+.bg-card {
+    background-color: rgb(30, 30, 31) !important;
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+    border: 2px solid rgb(189, 86, 245, 0.3);
+}
+
+.current-day {
+    transition: box-shadow 0.2s ease, color 0.2s ease !important;
+    box-shadow: 0 0 20px rgba(189, 86, 245, 0.5) !important;
+}
+
+.btn-card {
+    background-color: rgba(186, 57, 255, 0.3);
+    color: white;
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+.btn-card:hover {
+    background-color: rgba(186, 57, 255, 0.6);
+    color: white;
+}
+
+.btn-card:active,
+.btn-card:focus {
+    background-color: rgba(186, 57, 255, 0.6) !important;
+    color: white;
+    border: none;
+    opacity: 1;
+}
+
+.short-line {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 70px;
+    border: 1px solid rgb(189, 86, 245);
+    margin-left: 0;
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+.text {
+    color: rgb(233, 233, 233) !important;
+    transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+.link {
+    color: rgb(233, 233, 233);
+    text-decoration: none;
+    transition: color 0.2s ease !important;
+    text-decoration: underline;
+}
+
+.link:hover {
+    color: rgb(181, 181, 181);
+}
+
+nav {
+    border: 1px solid rgb(210, 188, 161);
+    border-radius: 0 0 15px 15px;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, border 0.2s ease !important;
+}
+
+.navbar-toggler {
+    background-color: rgb(189, 86, 245, 0.5);
+}
+
+.navbar-toggler:focus {
+    background-color: rgb(30, 30, 31);
+    box-shadow: 0 0 0 0.2rem rgb(189, 86, 245, 0.3);
+    border-color: rgb(189, 86, 245, 0.1);
+    background-color: rgb(189, 86, 245, 0.5);
+}
+
+.navbar {
+    border: none;
+    border-bottom: solid 2px rgb(189, 86, 245, 0.3) !important;
+}
+
+/* OTHER */
+.card-fix {
+    width: 100%;
+}
+
+.container {
+    padding-top: 60px !important;
+}
+
+.text {
+    opacity: var(--bs-text-opacity, 1);
+}
+
+.lesson-card {
+    transition: background-color 0.2s ease;
+    border: 1px solid rgb(189, 86, 245, 0.3);
+}
+
+.lesson-number {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.lesson-info {
+    font-size: 1rem;
+}
+
+.lesson-duration {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.lesson-test {
+    margin-top: 4px;
+    font-size: 0.875rem;
+    color: #dc3545;
+}
+
+.lesson-cancelled {
+    color: #6c757d;
+}
+
+.lesson-time {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.card-header {
+    border: none !important;
+}
+
+.btn-card {
+    border: none !important;
+}
+
+.lesson-card.highlighted {
+    background-color: #27272774;
+}
+
+.weekSelect {
+    background-color: #27272774;
+    border: none;
+    color: white;
+    width: 300px;
+    outline: 1px solid rgb(18, 18, 18);
+    transition: box-shadow 0.2s ease, color 0.2s ease, outline 0.2s ease !important;
+    margin: 0 auto;
+    display: block;
+}
+
+.weekSelect:focus {
+    outline: 1px solid rgba(186, 57, 255, 0.6);
+    box-shadow: 0 0 20px rgba(189, 86, 245, 0.5) !important;
+}
+
+.weekSelect option {
+    color: white;
+    background-color: rgb(30, 30, 31);
+    padding: 5px;
+}
+
+.skeleton {
+    display: inline-block;
+    border-radius: 8px;
+    background: rgb(69, 69, 71);
+    width: 200px;
+    height: 20px;
+    margin: 10px 0;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
