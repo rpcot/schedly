@@ -1,14 +1,16 @@
-# raspisssanie
+<p align="center">
+  <a href="https://schedule.rpcot.ru/info"><img src="https://api.rpcot.ru/images/rasp-logo" alt="лого" /></a>
+</p>
 
-Telegram bot and API for the website to conveniently view and manage school schedules and homework.
+# SCHEDLY
+
+Telegram bot and site to conveniently view and manage school schedules and homework.
 
 ## About the project
 
-❤️‍🔥 This bot helps you quickly get the latest schedule and homework updates.
-
-🕐 The bot saves all previous data, shows the current week and the next two weeks.
-
-✏️ The schedule is filled in by students, so you can specify all the details: homework, tests, class cancellations, extracurricular activities, and more.
+- This bot helps you quickly get the latest schedule and homework updates.
+- The bot saves all previous data, shows the current week and the next two weeks.
+- The schedule is filled in by students, so you can specify all the details: homework, tests, class cancellations, extracurricular activities, and more.
 
 ## What you can manage in the bot
 
@@ -25,18 +27,25 @@ Telegram bot and API for the website to conveniently view and manage school sche
 
 - /start — greeting and brief info  
 - /help — list of commands  
-- /site — link to the website  
+- /site the website  
 - /today — schedule for today  
 - /tomorrow — schedule for tomorrow
 
 ## Running the project
 
-0. Clone the repository:  
+Clone the repository:  
 ```bash
-git clone https://github.com/rpcot/raspisssanie.git
-cd raspisssanie
+git clone https://github.com/rpcot/schedly.git
+cd schedly
 ```
 
+### Install with Docker
+1. Build and start the containers
+```bash
+docker compose up --build -d
+```
+
+### Install without Docker
 1. Install yarn if you don't have it:
 ```bash
 npm install --global yarn
@@ -54,5 +63,5 @@ yarn start
 
 4. Start the API:
 ```bash
-yarn api-start
+yarn start:api
 ```

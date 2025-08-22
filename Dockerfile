@@ -10,4 +10,4 @@ COPY src ./src
 
 EXPOSE 4444
 
-CMD if [ "$NODE_APP" = "api" ]; then yarn api-start; else yarn start; fi
+CMD if [ "$NODE_APP" = "api" ]; then yarn start:api; else yarn start; fi

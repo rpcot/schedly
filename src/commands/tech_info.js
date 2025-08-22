@@ -5,13 +5,13 @@ module.exports = {
         const text = `
         <b>🤖 Бот</b>
         • Разработчик: <a href="https://t.me/rpcotik">@rpcotik</a>
-        • Версия бота: <code>v2.0.0</code>
+        • Версия бота: <code>v2.0.1</code>
         • Последнее обновление: <code>01.09.2025</code>
 
         <b>🌐 Сайт и API</b>
-        • Сайт: <a href="https://schedule.rpcot.ru">schedule.rpcot.ru</a>
-        • Версия сайта: <code>1.1.0</code>
-        • Версия API: <code>1.1.0</code>
+        • Сайт: <a href="https://schedule.rpcot.ru/schedule">schedule.rpcot.ru</a>
+        • Версия сайта: <code>2.0.0</code>
+        • Версия API: <code>2.0.0</code>
         • Последнее обновление: <code>01.09.2025</code>
 
         <b>🛠 Стек технологий</b>
@@ -20,7 +20,7 @@ module.exports = {
         • База данных: <code>MySQL</code>
 
         <b>📂 Репозиторий</b>
-        • https://github.com/rpcot/raspisssanie
+        • https://github.com/rpcot/schedly
         `.replace(/  +/g, '');
 
         await ctx.reply(text, {

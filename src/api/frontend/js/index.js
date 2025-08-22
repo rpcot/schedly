@@ -83,7 +83,7 @@ async function fetchDays() {
 
             if (data.status === 404) {
                 // window.location.href = 'http://127.0.0.1:3000/html/schedule.html';
-                window.location.href = 'https://schedule.rpcot.ru';
+                window.location.href = 'https://schedule.rpcot.ru/schedule';
                 return;
             }
 

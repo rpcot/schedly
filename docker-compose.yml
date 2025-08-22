@@ -2,8 +2,11 @@ version: '3.8'
 
 services:
   rasp-api:
-    image: raspisssanie
-    container_name: rasp-api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: schedly
+    container_name: schedly-api
     env_file:
       - .env
     environment:
@@ -15,8 +18,11 @@ services:
     restart: unless-stopped
 
   rasp-bot:
-    image: raspisssanie
-    container_name: rasp-bot
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: schedly
+    container_name: schedly-bot
     env_file:
       - .env
     environment:
