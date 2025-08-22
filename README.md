@@ -2,9 +2,10 @@
   <a href="https://schedule.rpcot.ru/info"><img src="https://api.rpcot.ru/images/rasp-logo" alt="лого" /></a>
 </p>
 
-# SCHEDLY
-
+<h1 align="center">SCHEDLY</h1>
+<div align="center">
 Telegram bot and site to conveniently view and manage school schedules and homework.
+</div>
 
 ## About the project
 
