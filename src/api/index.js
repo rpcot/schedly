@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
-const { apiPort, apiHost, defaultBellsPath, WeekUrlTemplate } = require('../config');
+const { apiPort, apiHost, defaultBellsPath, weekUrlTemplate } = require('../config');
 const { Weeks } = require('../models');
 const { readFileSync } = require('fs');
 
@@ -89,7 +89,7 @@ async function getAllWeekDates() {
         }
 
         data.unshift(
-            { number: week.number, date, url: `${WeekUrlTemplate}${week.number}` }
+            { number: week.number, date, url: `${weekUrlTemplate}${week.number}` }
         );
 
         count++;

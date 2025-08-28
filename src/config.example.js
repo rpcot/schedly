@@ -17,7 +17,7 @@ module.exports = {
 
     apiHost: API_HOST,
     apiPort: API_PORT,
-    WeekUrlTemplate: '', // URL template for generating schedule links by week number, e.g. https://schedule.rpcot.ru/schedule?week=
+    weekUrlTemplate: '', // URL template for generating schedule links by week number, e.g. https://schedule.rpcot.ru/schedule?week=
 
     databaseSettings: {
         dialect: 'mysql',
