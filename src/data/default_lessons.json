@@ -1,9 +1,5 @@
 [
     {
-        "id": "math",
-        "name": "Математика"
-    },
-    {
         "id": "russian",
         "name": "Русский язык"
     },
@@ -12,11 +8,67 @@
         "name": "Физика"
     },
     {
+        "id": "geometry",
+        "name": "Геометрия"
+    },
+    {
+        "id": "algebra",
+        "name": "Алгебра"
+    },
+    {
+        "id": "labor",
+        "name": "Труд"
+    },
+    {
+        "id": "literature",
+        "name": "Литература"
+    },
+    {
+        "id": "english",
+        "name": "Английский язык"
+    },
+    {
+        "id": "informatics",
+        "name": "Информатика"
+    },
+    {
+        "id": "biology",
+        "name": "Биология"
+    },
+    {
+        "id": "social",
+        "name": "Обществознание"
+    },
+    {
+        "id": "history",
+        "name": "История"
+    },
+    {
+        "id": "chemistry",
+        "name": "Химия"
+    },
+    {
+        "id": "obzr",
+        "name": "ОБЗР"
+    },
+    {
+        "id": "geography",
+        "name": "География"
+    },
+    {
         "id": "sport",
         "name": "Физкультура"
     },
     {
-        "id": "null",
+        "id": "schoolAssembly",
+        "name": "Торжественная линейка"
+    },
+    {
+        "id": "window",
         "name": "Окно"
+    },
+    {
+        "id": "classHour",
+        "name": "Классный час"
     }
 ]
