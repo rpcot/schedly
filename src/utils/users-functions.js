@@ -1,4 +1,4 @@
-const { InlineKeyboard } = require("grammy");
+const { InlineKeyboard, Keyboard } = require("grammy");
 const { Users } = require("../models");
 const { developerId } = require("../config");
 const { errorAnswer } = require("./utils");
@@ -125,9 +125,12 @@ async function answerGoAdminRequest(ctx, action, targetUserId) {
                 parse_mode: 'HTML',
             });
 
+            const keyboard = await getGeneralMenuKeyboard(targetUserId);
+
             await ctx.api.sendMessage(targetUserId, `<b>Привет!</b> Твой запрос на получение <b>админ прав</b> одобрен, теперь ты <b>можешь посмотреть</b> доступные команды с помощью <b>/help</b>.\n💖 Спасибо за помощь!`, {
                 message_effect_id: '5104841245755180586',
                 parse_mode: 'HTML',
+                reply_markup: keyboard,
             })
                 .catch(() => { });
         } catch (error) {
@@ -176,6 +179,26 @@ async function showUserManagePanel(ctx, targetUserId, { reply = true } = {}) {
 
 }
 
+async function getGeneralMenuKeyboard(userId) {
+    const keyboard = new Keyboard()
+        .text('📅 Расписание на сегодня')
+        .text('📅 Расписание на завтра')
+        .row()
+        .text('🌐 Сайт бота')
+        .row()
+        .text('🚀 Стать админом')
+        .text('💖 Обратная связь')
+        .row()
+        .resized();
+
+    const isAdmin = await checkAdminPerms(userId);
+    if (isAdmin) {
+        keyboard.text('🔧 Управление расписанием');
+    }
+
+    return keyboard;
+}
+
 module.exports = {
     getUserData,
     setWait,
@@ -186,4 +209,5 @@ module.exports = {
     sendGoAdminRequest,
     answerGoAdminRequest,
     showUserManagePanel,
+    getGeneralMenuKeyboard,
 };

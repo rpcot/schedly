@@ -1,7 +1,7 @@
 const { Keyboard } = require("grammy");
 const { errorAnswer } = require("../utils/utils");
 const { sendActionLog } = require("../utils/logging-functions");
-const { checkAdminPerms } = require("../utils/users-functions");
+const { checkAdminPerms, getGeneralMenuKeyboard } = require("../utils/users-functions");
 const { developerId } = require("../config");
 
 module.exports = {
@@ -34,21 +34,7 @@ module.exports = {
         <b>💖</b>
         `.replace(/  +/g, '');
 
-        const keyboard = new Keyboard()
-            .text('📅 Расписание на сегодня')
-            .text('📅 Расписание на завтра')
-            .row()
-            .text('🌐 Сайт бота')
-            .row()
-            .text('🚀 Стать админом')
-            .text('💖 Обратная связь')
-            .row()
-            .resized();
-
-        const isAdmin = await checkAdminPerms(ctx.from.id);
-        if (isAdmin) {
-            keyboard.text('🔧 Управление расписанием');
-        }
+        const keyboard = await getGeneralMenuKeyboard(ctx.from.id);
 
         await ctx.reply(text, {
             parse_mode: 'HTML',

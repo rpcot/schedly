@@ -1,5 +1,5 @@
 const { Keyboard } = require("grammy");
-const { getUserData } = require("../utils/users-functions");
+const { getUserData, getGeneralMenuKeyboard } = require("../utils/users-functions");
 
 module.exports = {
     name: 'help',
@@ -21,16 +21,7 @@ module.exports = {
         <b>🛠️ Административные</b>
         `.replace(/  +/g, '');
 
-        const keyboard = new Keyboard()
-            .text('📅 Расписание на сегодня')
-            .text('📅 Расписание на завтра')
-            .row()
-            .text('🌐 Сайт бота')
-            .row()
-            .text('🚀 Стать админом')
-            .text('💖 Обратная связь')
-            .row()
-            .resized();
+        const keyboard = await getGeneralMenuKeyboard(ctx.from.id);
 
         const userdata = await getUserData(ctx.from.id);
 
