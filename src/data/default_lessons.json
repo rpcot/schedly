@@ -64,15 +64,19 @@
         "name": "Торжественная линейка"
     },
     {
+        "id": "financialLiteracy",
+        "name": "Финансовая грамотность"
+    },
+    {
+        "id": "projectActivity",
+        "name": "Проектная деятельность"
+    },
+    {
         "id": "window",
         "name": "Окно"
     },
     {
         "id": "classHour",
         "name": "Классный час"
-    },
-    {
-        "id": "financialLiteracy",
-        "name": "Финансовая грамотность"
     }
 ]
