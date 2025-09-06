@@ -1,10 +1,10 @@
 const { InlineKeyboard } = require("grammy");
-const { getDayScheduleById } = require("../utils/schedule-functions");
+const { getDayScheduleById, getSubgroups } = require("../utils/schedule-functions");
 const { setWait } = require("../utils/users-functions");
 
 module.exports = {
     data: 'add_homework',
-    async execute(bot, ctx, userId, dataId, lessonIndex) {
+    async execute(bot, ctx, userId, dataId, lessonIndex, teacherId) {
 
         lessonIndex = parseInt(lessonIndex);
 
@@ -20,14 +20,36 @@ module.exports = {
             await ctx.answerCallbackQuery();
         }
 
-        const inline = new InlineKeyboard()
-            .text('Отменить', `back_manage_day?:${userId}?:${dataId}`);
+        const lessonData = data.lessons[lessonIndex];
+        const subgroups = getSubgroups();
 
-        await setWait(ctx.from.id, { id: 'add_homework', dataId, lessonIndex, editMessageId: ctx.msg.message_id });
-        
-        await ctx.editMessageText(`Напиши содержание домашнего задания для ${lessonIndex + 1} урока ${data.lessons[lessonIndex].name}`, {
-            reply_markup: inline,
-        });
+        if (Object.keys(subgroups.lessons).includes(lessonData.name) && !teacherId) {
+            const inline = new InlineKeyboard();
+
+            const teachers = subgroups.lessons[lessonData.name];
+            for (const teacherId of teachers) {
+                inline
+                    .text(`Группа ${subgroups.teachers[teacherId]}`, `add_homework?:${userId}?:${dataId}?:${lessonIndex}?:${teacherId}`);
+            }
+
+            inline
+                .row()
+                .text('Отменить', `back_manage_day?:${userId}?:${dataId}`);
+            
+            await ctx.editMessageText(`Выберите <b>группу</b>, для которой вы хотите добавить <b>домашнее задание</b> на урок ${lessonData.name}`, {
+                parse_mode: 'HTML',
+                reply_markup: inline,
+            });
+        } else {
+            const inline = new InlineKeyboard()
+                .text('Отменить', `back_manage_day?:${userId}?:${dataId}`);
+
+            await setWait(ctx.from.id, { id: 'add_homework', dataId, lessonIndex, editMessageId: ctx.msg.message_id, teacherId });
+
+            await ctx.editMessageText(`Напиши содержание домашнего задания для ${lessonIndex + 1} урока ${data.lessons[lessonIndex].name}`, {
+                reply_markup: inline,
+            });
+        }
 
     }
 };

@@ -1,5 +1,5 @@
 const { InlineKeyboard, Keyboard } = require('grammy');
-const { dayNames, defaultLessonsSchedulePath, defaultBellsPath, defaultLessonsPath } = require('../config');
+const { dayNames, defaultLessonsSchedulePath, defaultBellsPath, defaultLessonsPath, subgroupsPath } = require('../config');
 const { Days, Weeks } = require('../models');
 const { getSettings } = require('./settings-functions');
 const { getTimestampFromDate, getTimestamp } = require('./utils');
@@ -17,13 +17,17 @@ function getDefaultLessons() {
     return JSON.parse(readFileSync(defaultLessonsPath, 'utf-8'));
 }
 
+function getSubgroups() {
+    return JSON.parse(readFileSync(subgroupsPath, 'utf-8'));
+}
+
 function getWeekDate(difference = 0) {
     const mondayDate = new Date();
-    
+
     if (mondayDate.getDay() === 0) {
         mondayDate.setDate(mondayDate.getDate() - 7);
     }
-    
+
     mondayDate.setHours(0, 0, 0, 0);
     mondayDate.setDate(mondayDate.getDate() - mondayDate.getDay() + 1);
 
@@ -71,7 +75,7 @@ function getDayDates(difference = 0) {
 function getNextMonday() {
     const monday = new Date();
     monday.setHours(0, 0, 0, 0);
-    
+
     if (monday.getDay() === 0) {
         monday.setDate(monday.getDate() + 1);
     } else {
@@ -135,7 +139,7 @@ function getDayScheduleText(data, dayOfWeek) {
         text += `\n<b>Заканчиваем в ${lessonEndTime}</b>`;
     }
 
-    return text;
+    return { originalText: text, slicedText: text.slice(0, 4096) };
 
 }
 
@@ -344,23 +348,26 @@ async function showManageDay(ctx, weekId, dayOfWeek, { editMessageId } = {}) {
         .row()
         .text('Вернуться', `manage?:${ctx.from.id}?:${weekId}`);
 
-    const text = getDayScheduleText(data, dayOfWeek);
+    const { originalText, slicedText } = getDayScheduleText(data, dayOfWeek);
+    const parse_mode = originalText.length > 4096
+        ? null
+        : 'HTML';
 
     if (editMessageId) {
         try {
-            await ctx.api.editMessageText(ctx.chat.id, editMessageId, text, {
-                parse_mode: 'HTML',
+            await ctx.api.editMessageText(ctx.chat.id, editMessageId, slicedText, {
+                parse_mode,
                 reply_markup: inline,
             });
         } catch (_) {
-            await ctx.reply(text, {
-                parse_mode: 'HTML',
+            await ctx.reply(slicedText, {
+                parse_mode,
                 reply_markup: inline,
             });
         }
     } else {
-        await ctx.editMessageText(text, {
-            parse_mode: 'HTML',
+        await ctx.editMessageText(slicedText, {
+            parse_mode,
             reply_markup: inline,
         });
     }
@@ -394,20 +401,22 @@ async function showScheduleDay(ctx, time) {
 
     const data = weekDays[dayOfWeek];
 
-    const text = getDayScheduleText(data, dayOfWeek);
-    
+    const { originalText, slicedText } = getDayScheduleText(data, dayOfWeek);
+    const parse_mode = originalText.length > 4096
+        ? null
+        : 'HTML';
     const reply_markup = (ctx.chat.type !== 'private')
         ? { remove_keyboard: true }
         : null;
 
     try {
-        await ctx.editMessageText(text, {
-            parse_mode: 'HTML',
+        await ctx.editMessageText(slicedText, {
+            parse_mode,
             reply_markup,
         });
     } catch (_) {
-        await ctx.reply(text, {
-            parse_mode: 'HTML',
+        await ctx.reply(slicedText, {
+            parse_mode,
             reply_markup,
         });
     }
@@ -543,6 +552,7 @@ module.exports = {
     getDefaultLessonsSchedule,
     getDefaultBells,
     getDefaultLessons,
+    getSubgroups,
     getDayScheduleById,
     getDaySchedule,
     getLastWeek,

@@ -1,0 +1,16 @@
+{
+    "lessons": {
+        "Английский язык": [
+            "syraya", "natalia"
+        ],
+        "Информатика": [
+            "irina", "darya"
+        ]
+    },
+    "teachers": {
+        "syraya": "Сураи И.",
+        "natalia": "Натальи В.",
+        "irina": "Ирины В.",
+        "darya": "Дарьи Ю."
+    }
+}

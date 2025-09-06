@@ -1,7 +1,7 @@
 const { developerId } = require("../config");
 const { Days } = require("../models");
 const { sendActionLog } = require("../utils/logging-functions");
-const { getDayScheduleById, showManageDay } = require("../utils/schedule-functions");
+const { getDayScheduleById, showManageDay, getSubgroups } = require("../utils/schedule-functions");
 const { getUserData, setWait } = require("../utils/users-functions");
 const { errorAnswer } = require("../utils/utils");
 
@@ -86,7 +86,12 @@ module.exports = {
                 if (data.lessons[wait.lessonIndex].homework.length >= 3)
                     return void await errorAnswer(ctx, `Для данного урока достигнуто максимальное количество домашних заданий`, { deleteAfter: 5 });
 
-                const homeworkText = ctx.msg.text.slice(0, 300);
+                let homeworkText = ctx.msg.text.slice(0, 300);
+                if (wait.teacherId) {
+                    const { teachers } = await getSubgroups();
+                    homeworkText = `группа ${teachers[wait.teacherId]}: ${homeworkText}`;
+                }
+
                 const targetLessonData = data.lessons[wait.lessonIndex];
 
                 for (const lesson of data.lessons) {
