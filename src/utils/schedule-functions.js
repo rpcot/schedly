@@ -1,4 +1,4 @@
-const { InlineKeyboard } = require('grammy');
+const { InlineKeyboard, Keyboard } = require('grammy');
 const { dayNames, defaultLessonsSchedulePath, defaultBellsPath, defaultLessonsPath } = require('../config');
 const { Days, Weeks } = require('../models');
 const { getSettings } = require('./settings-functions');
@@ -395,14 +395,20 @@ async function showScheduleDay(ctx, time) {
     const data = weekDays[dayOfWeek];
 
     const text = getDayScheduleText(data, dayOfWeek);
+    
+    const reply_markup = (ctx.chat.type !== 'private')
+        ? { remove_keyboard: true }
+        : null;
 
     try {
         await ctx.editMessageText(text, {
             parse_mode: 'HTML',
+            reply_markup,
         });
     } catch (_) {
         await ctx.reply(text, {
             parse_mode: 'HTML',
+            reply_markup,
         });
     }
 

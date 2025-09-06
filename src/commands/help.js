@@ -42,7 +42,9 @@ module.exports = {
 
         await ctx.reply(text, {
             parse_mode: 'HTML',
-            reply_markup: keyboard,
+            reply_markup: (ctx.chat.type === 'private')
+                ? keyboard
+                : null,
         });
 
     }
