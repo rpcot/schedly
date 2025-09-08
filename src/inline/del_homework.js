@@ -60,7 +60,7 @@ module.exports = {
                 index++;
             }
 
-            inline.text('Вернуться', `choose_lesson?:${userId}?:${dataId}`);
+            inline.text('Вернуться', `choose_lesson?:${userId}?:${dataId}?:del_homework`);
 
             await ctx.editMessageText('Выбери домашнее задание, которое ты хочешь удалить:', {
                 reply_markup: inline,

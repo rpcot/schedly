@@ -1,9 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
-const { apiPort, apiHost, defaultBellsPath, weekUrlTemplate } = require('../config');
-const { Weeks } = require('../models');
+const { token, apiPort, apiHost, defaultBellsPath, weekUrlTemplate, attachmentUrlTemplate } = require('../config');
+const { Weeks, Attachments } = require('../models');
 const { readFileSync } = require('fs');
+const { Bot } = require('grammy');
+
+const bot = new Bot(token);
 
 function getDefaultBells() {
     return JSON.parse(readFileSync(defaultBellsPath, 'utf-8'));
@@ -39,6 +42,22 @@ async function getData(week) {
         for (const lesson of day.lessons) {
             lesson.bell = bells[lessonIndex];
             lesson.number = lessonIndex + 1;
+
+            const updatedAttachments = [];
+            for (const attachment of lesson?.attachments || []) {
+                const attachmentData = await getAttachment(attachment.id);
+                if (!attachmentData) continue;
+
+                updatedAttachments.push({
+                    name: attachmentData.name || `Вложение ${attachmentData.id}`,
+                    id: attachment.id,
+                    url: (attachmentData.value.type === 'link')
+                        ? attachmentData.value.content
+                        : `${attachmentUrlTemplate}${attachmentData.id}`,
+                });
+            }
+
+            lesson.attachments = updatedAttachments;
 
             updatedLessons.push(lesson);
 
@@ -109,6 +128,22 @@ async function getCurrentWeek() {
     return data;
 }
 
+async function getAttachment(id) {
+    const attachmentData = await Attachments.findByPk(id);
+
+    return attachmentData;
+}
+
+async function getFileFromTelegram(fileId) {
+    const file = await bot.api.getFile(fileId);
+
+    const url = `https://api.telegram.org/file/bot${token}/${file.file_path}`;
+
+    const response = await fetch(url);
+
+    return response;
+}
+
 const app = express();
 const upload = multer();
 
@@ -132,14 +167,14 @@ app.get('/schedule/', upload.none(), async (req, res) => {
         const week = (!req.query?.weekNumber)
             ? await getCurrentWeek()
             : await getWeekByNumber(req.query.weekNumber);
-        
+
         if (!week)
             return void res.status(404).json({ ok: false, status: 404, message: 'Ничего не найдено' });
-        
+
         const data = await getData(week);
 
         res.status(200).json({ ok: true, status: 200, data: { days: data, week } });
-    } catch(e) {
+    } catch (e) {
         console.error(e);
         res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
     }
@@ -150,7 +185,42 @@ app.get('/weeks/', upload.none(), async (req, res) => {
         const data = await getAllWeekDates();
 
         res.status(200).json({ ok: true, status: 200, data });
-    } catch(e) {
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
+    }
+});
+
+app.get('/attachment/:id', upload.none(), async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const attachmentData = await getAttachment(id);
+        if (!attachmentData)
+            return void res.status(404).json({ ok: false, status: 404, message: 'Вложение не найдено' });
+
+        const response = await getFileFromTelegram(attachmentData.value.fileId);
+        if (!response.ok)
+            return void res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
+
+        const dispositionType = (attachmentData.value.type === 'document')
+            ? 'attachment'
+            : 'inline';
+
+        const buffer = Buffer.from(await response.arrayBuffer());
+
+        res.setHeader("Content-Type", attachmentData.value.mimeType || "application/octet-stream");
+        res.setHeader("Accept-Ranges", "bytes");
+        res.setHeader("Content-Length", buffer.length);
+        try {
+            res.setHeader("Content-Disposition", `${dispositionType}; filename="${attachmentData.value.fileName}"`);
+        } catch (_) {
+            const fileName = `file.${attachmentData.value.fileName.split('.')[1]}`;
+            res.setHeader("Content-Disposition", `${dispositionType}; filename="${fileName}"`);
+        }
+
+        res.send(buffer);
+    } catch (e) {
         console.error(e);
         res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
     }

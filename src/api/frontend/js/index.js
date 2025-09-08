@@ -3,6 +3,7 @@ const lessonCardHTML = `<div class="lesson-card {lesson-cancelled} {highlighted}
     <div class="lesson-info flex-grow-1">
         <b>{name}</b> <span class="lesson-time">({cabinet}) {bell}</span><br>
         <div>{homework}</div>
+        <div>{attachments}</div>
         {exam}
     </div>
 </div>`;
@@ -17,7 +18,7 @@ const selectWeekDivHTML = `<select class="form-select weekSelect mt-2" id="weekS
                             <option selected disabled>Загрузка...</option>
                         </select>`;
 
-const examHTML = '<div class="lesson-test">⚠️ Тестовая работа: {details}</div>';
+const examHTML = '<div class="lesson-test">⚠️ Проверочная работа: {details}</div>';
 
 function getQueryParams() {
     const params = new URLSearchParams(window.location.search);
@@ -174,11 +175,16 @@ async function fetchDays() {
                                     .replace('{number}', lesson.number);
                             }
 
+                            const attachmentsString = lesson.attachments.map((data) => {
+                                return `<a class="link" href="${data.url}" target="_blank">${data.name}</a>`
+                            }).join(' • ');
+
                             lessonCard = lessonCard
                                 .replace('{name}', lesson.name)
                                 .replace('{cabinet}', lesson.cabinet)
                                 .replace('{bell}', lesson.bell)
-                                .replace('{homework}', lesson.homework.join('<br>') || 'Домашнее задание не указано');
+                                .replace('{homework}', lesson.homework.join('<br>') || 'Домашнее задание не указано')
+                                .replace('{attachments}', (attachmentsString) ? `└─ ${attachmentsString}` : '');
 
                             lessonsHTML += lessonCard;
                         }

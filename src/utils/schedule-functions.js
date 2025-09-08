@@ -2,7 +2,7 @@ const { InlineKeyboard, Keyboard } = require('grammy');
 const { dayNames, defaultLessonsSchedulePath, defaultBellsPath, defaultLessonsPath, subgroupsPath } = require('../config');
 const { Days, Weeks } = require('../models');
 const { getSettings } = require('./settings-functions');
-const { getTimestampFromDate, getTimestamp } = require('./utils');
+const { getTimestampFromDate, getTimestamp, plural } = require('./utils');
 const { readFileSync } = require('fs');
 
 function getDefaultLessonsSchedule() {
@@ -115,6 +115,10 @@ function getDayScheduleText(data, dayOfWeek) {
         for (const lesson of data.lessons) {
             const homework = `\n${lesson.homework.join(', \n') || 'Домашнее задание не указано'}`;
             let lessonText = `\n${index + 1}. <b>${bells[index]} ${lesson.name}</b> (${lesson.cabinet === 'Спортзал' ? 'Спортзал' : `Каб. ${lesson.cabinet}`}): ${homework}`;
+
+            if (lesson.attachments?.length) {
+                lessonText += `\n└─ ${lesson.attachments.length} ${plural(lesson.attachments.length, ['вложение', 'вложения', 'вложений'])}`;
+            }
 
             if (lesson.exam) {
                 lessonText += `\n⚠️ <b>Проверочная работа</b>: ${lesson.exam}`;
@@ -330,10 +334,12 @@ async function showManageDay(ctx, weekId, dayOfWeek, { editMessageId } = {}) {
         .row()
         .text('Перенести ДЗ', `choose_lesson?:${ctx.from.id}?:${data.id}?:move_homework`)
         .row()
+        .text('Добавить вложение', `choose_lesson?:${ctx.from.id}?:${data.id}?:add_attachment`)
+        .text('Удалить вложение', `choose_lesson?:${ctx.from.id}?:${data.id}?:del_attachment`)
+        .row()
         .text('Добавить или удалить проверочную', `choose_lesson?:${ctx.from.id}?:${data.id}?:manage_exam`)
         .row()
         .text('Изменить звонки', `change_bells?:${ctx.from.id}?:${data.id}`)
-        .row()
         .text('Изменить кабинет', `choose_lesson?:${ctx.from.id}?:${data.id}?:change_cabinet`)
         .row()
         .text('Добавить урок', `add_lesson?:${ctx.from.id}?:${data.id}`)
@@ -344,7 +350,16 @@ async function showManageDay(ctx, weekId, dayOfWeek, { editMessageId } = {}) {
         .text('Отменить урок', `toggle_lesson?:${ctx.from.id}?:${data.id}`)
         .text((data.holiday) ? `Отметить учебным` : `Отметить неучебным`, `toggle_holiday?:${ctx.from.id}?:${data.id}`)
         .row()
-        .text('Добавить или удалить примечание', `manage_note?:${ctx.from.id}?:${data.id}`)
+        .text('Добавить или удалить примечание', `manage_note?:${ctx.from.id}?:${data.id}`);
+
+    const hasAttachments = await data.countAttachments();
+    if (hasAttachments) {
+        inline
+            .row()
+            .text('Посмотреть вложения', `show_attachment?:${ctx.from.id}?:${data.id}?:true`);
+    }
+
+    inline
         .row()
         .text('Вернуться', `manage?:${ctx.from.id}?:${weekId}`);
 
@@ -370,6 +385,51 @@ async function showManageDay(ctx, weekId, dayOfWeek, { editMessageId } = {}) {
             parse_mode,
             reply_markup: inline,
         });
+    }
+
+}
+
+async function showScheduleDayByWeekId(ctx, weekId, dayOfWeek, { editMessageId } = {}) {
+
+    dayOfWeek = parseInt(dayOfWeek);
+
+    const data = await getDaySchedule(dayOfWeek, weekId);
+
+    const { originalText, slicedText } = getDayScheduleText(data, dayOfWeek);
+    const hasAttachments = await data.countAttachments();
+    const parse_mode = originalText.length > 4096
+        ? null
+        : 'HTML';
+    const reply_markup = (ctx.chat.type !== 'private')
+        ? { remove_keyboard: true }
+        : (hasAttachments)
+            ? new InlineKeyboard().text('Посмотреть вложения', `show_attachment?:${ctx.from.id}?:${data.id}?:false`)
+            : null;
+
+    if (editMessageId) {
+        try {
+            await ctx.api.editMessageText(ctx.chat.id, editMessageId, slicedText, {
+                parse_mode,
+                reply_markup,
+            });
+        } catch (_) {
+            await ctx.reply(slicedText, {
+                parse_mode,
+                reply_markup,
+            });
+        }
+    } else {
+        try {
+            await ctx.editMessageText(slicedText, {
+                parse_mode,
+                reply_markup,
+            });
+        } catch (_) {
+            await ctx.reply(slicedText, {
+                parse_mode,
+                reply_markup,
+            });
+        }
     }
 
 }
@@ -401,25 +461,7 @@ async function showScheduleDay(ctx, time) {
 
     const data = weekDays[dayOfWeek];
 
-    const { originalText, slicedText } = getDayScheduleText(data, dayOfWeek);
-    const parse_mode = originalText.length > 4096
-        ? null
-        : 'HTML';
-    const reply_markup = (ctx.chat.type !== 'private')
-        ? { remove_keyboard: true }
-        : null;
-
-    try {
-        await ctx.editMessageText(slicedText, {
-            parse_mode,
-            reply_markup,
-        });
-    } catch (_) {
-        await ctx.reply(slicedText, {
-            parse_mode,
-            reply_markup,
-        });
-    }
+    await showScheduleDayByWeekId(ctx, data.weekId, data.index);
 
 }
 
@@ -471,7 +513,7 @@ async function monitoringSchedules() {
     }, 10 * 1000);
 }
 
-async function showLessonChoose(ctx, data, inlineId, { text = 'Выбери урок:', args = '', exceptions = [], dataId = '' } = {}) {
+async function showLessonChoose(ctx, data, inlineId, { text = 'Выбери урок:', args = '', exceptions = [], dataId = '', backInlineId = 'back_manage_day' } = {}) {
 
     const inline = new InlineKeyboard();
 
@@ -498,7 +540,7 @@ async function showLessonChoose(ctx, data, inlineId, { text = 'Выбери ур
         inline.row();
     }
 
-    inline.text('Вернуться', `back_manage_day?:${ctx.from.id}?:${dataId || data.id}`);
+    inline.text('Вернуться', `${backInlineId}?:${ctx.from.id}?:${dataId || data.id}`);
 
     await ctx.editMessageText(text, {
         reply_markup: inline,
@@ -563,6 +605,7 @@ module.exports = {
     getAllWeeks,
     showScheduleManage,
     showScheduleDay,
+    showScheduleDayByWeekId,
     showScheduleDayChoose,
     showManageDay,
     monitoringSchedules,

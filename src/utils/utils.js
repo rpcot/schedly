@@ -47,24 +47,24 @@ module.exports = {
 
         const years = Math.floor(sec / (365 * 24 * 3600));
         sec %= 365 * 24 * 3600;
-        
+
         const months = Math.floor(sec / (30 * 24 * 3600));
         sec %= 30 * 24 * 3600;
-        
+
         const weeks = Math.floor(sec / (7 * 24 * 3600));
         sec %= 7 * 24 * 3600;
-        
+
         const days = Math.floor(sec / (24 * 3600));
         sec %= 24 * 3600;
-        
+
         const hours = Math.floor(sec / 3600);
         sec %= 60 * 60;
-        
+
         const minutes = Math.floor(sec / 60);
         sec %= 60;
-        
+
         const seconds = sec;
-    
+
         if (length === 'short') {
             return format
                 .replace('yy', (years > 0) ? `${years} г. ` : '')
@@ -93,22 +93,22 @@ module.exports = {
 
         const years = Math.floor(sec / (365 * 24 * 3600));
         sec %= 365 * 24 * 3600;
-        
+
         const months = Math.floor(sec / (30 * 24 * 3600));
         sec %= 30 * 24 * 3600;
-        
+
         const weeks = Math.floor(sec / (7 * 24 * 3600));
         sec %= 7 * 24 * 3600;
-        
+
         const days = Math.floor(sec / (24 * 3600));
         sec %= 24 * 3600;
-        
+
         const hours = Math.floor(sec / 3600);
         sec %= 60 * 60;
-        
+
         const minutes = Math.floor(sec / 60);
         sec %= 60;
-        
+
         const seconds = sec;
 
         if (years > 0) return `${years} ${plural(years, ['год', 'года', 'лет'])}`;
@@ -131,24 +131,24 @@ module.exports = {
             const [day, month] = splitString[0].split('.').map(v => Number(v));
             const [hour, min] = splitString[1].split(':').map(v => Number(v));
             const currentDate = new Date();
-            const date = new Date(currentDate.getFullYear(), month-1, day, hour, min);
+            const date = new Date(currentDate.getFullYear(), month - 1, day, hour, min);
             if (date.toString() === 'Invalid Date') return;
             return date;
-        } catch(_) {
+        } catch (_) {
             return;
         }
 
     },
-    
+
     convertTimeToSeconds(time) {
         const regex = /(\d+)([dmyhosw]+)/g;
         const matches = time.matchAll(regex);
         let totalSeconds = 0;
-      
+
         for (const match of matches) {
-            const value = parseInt(match[1].slice(0, match[0].length-1));
+            const value = parseInt(match[1].slice(0, match[0].length - 1));
             const unit = (match[2].endsWith('mo')) ? match[2].slice(-2) : match[2].slice(-1);
-      
+
             switch (unit) {
                 case 'y':
                     totalSeconds += value * 365 * 24 * 60 * 60;
@@ -175,7 +175,7 @@ module.exports = {
                     continue;
             }
         }
-      
+
         return totalSeconds;
 
     },
@@ -200,39 +200,44 @@ module.exports = {
     getStringWithDate(date = new Date()) {
 
         const day = ('0' + date.getDate()).slice(-2);
-    
+
         const month = ('0' + (date.getMonth() + 1)).slice(-2);
-    
+
         const year = date.getFullYear();
-    
+
         const hour = ('0' + date.getHours()).slice(-2);
-    
+
         const minute = ('0' + date.getMinutes()).slice(-2);
-    
+
         const second = ('0' + date.getSeconds()).slice(-2);
-    
+
         const time = `${day}.${month}.${year} ${hour}:${minute}:${second}`;
-    
+
         return time;
-    
+
     },
 
     async errorAnswer(ctx, text, { deleteAfter, keyboard = {} } = {}) {
-    
+
         const msg = await ctx.reply(`⚠️ ${text}`, {
             reply_markup: keyboard,
             parse_mode: 'HTML',
         });
-    
+
         if (deleteAfter > 0) {
             setTimeout(async () => {
                 await ctx.api.deleteMessage(ctx.chat.id, msg.message_id)
-                    .catch(() => {});
+                    .catch(() => { });
             }, deleteAfter * 1000);
         }
-    
+
         return msg;
-    
+
+    },
+
+    capitalize(str) {
+        if (!str) return str;
+        return str.charAt(0).toUpperCase() + str.slice(1);
     },
 
     plural,
