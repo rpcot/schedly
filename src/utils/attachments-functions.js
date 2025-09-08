@@ -174,9 +174,10 @@ async function checkMsgMediaGroup(ctx, mediaGroupId) {
         await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id)
             .catch(() => { });
 
+        const day = await attachmentData.getDay();
+
         const lessonData = day.lessons[attachmentData.lessonIndex];
 
-        const day = await attachmentData.getDay();
         if (lessonData?.attachments?.length >= 5)
             return void await errorAnswer(ctx, 'Для данного урока достигнуто максимальное количество вложений', {
                 deleteAfter: 5,
@@ -191,17 +192,18 @@ async function checkMsgMediaGroup(ctx, mediaGroupId) {
             id: newAttachmentData.id,
             name: newAttachmentData.name,
         });
+        day.lessons[attachmentData.lessonIndex] = lessonData;
         day.changed('lessons', true);
         await day.save();
 
         await sendActionLog(ctx, 'Добавлено вложение', [
-            `Значение: ${JSON.stringify({ ...value, attachmentName: wait.attachmentName }, null, 2)}`,
+            `Значение: ${JSON.stringify({ ...value, attachmentName: newAttachmentData.attachmentName }, null, 2)}`,
             `Урок: ${lessonData.name}`,
             `Индекс урока: ${newAttachmentData.lessonIndex}`,
             `Айди дня: ${day.id}`,
             `Айди недели: ${day.weekId}`,
         ]);
-    } catch (_) { }
+    } catch (_) {}
 }
 
 module.exports = {
