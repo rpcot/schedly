@@ -11,7 +11,7 @@ services:
       - .env
     environment:
       - NODE_APP=api
-      - TZ=Europe/Moscow
+      - TZ=Asia/Novosibirsk
     ports:
       - "127.0.0.1:4444:4444"
     extra_hosts:
@@ -28,7 +28,7 @@ services:
       - .env
     environment:
       - NODE_APP=bot
-      - TZ=Europe/Moscow
+      - TZ=Asia/Novosibirsk
     volumes:
       - ./logs:/app/logs
     extra_hosts:
