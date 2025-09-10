@@ -113,8 +113,13 @@ function getDayScheduleText(data, dayOfWeek) {
 
         let index = 0;
         for (const lesson of data.lessons) {
+            const cabinetsWithoutCaption = ['Спортзал', '-', 'Не указан'];
+            const cabinet = (cabinetsWithoutCaption.includes(lesson.cabinet))
+                ? lesson.cabinet
+                : `Каб. ${lesson.cabinet}`;
+
             const homework = `\n${lesson.homework.join(', \n') || 'Домашнее задание не указано'}`;
-            let lessonText = `\n${index + 1}. <b>${bells[index]} ${lesson.name}</b> (${lesson.cabinet === 'Спортзал' ? 'Спортзал' : `Каб. ${lesson.cabinet}`}): ${homework}`;
+            let lessonText = `\n${index + 1}. <b>${bells[index]} ${lesson.name}</b> (${cabinet}): ${homework}`;
 
             if (lesson.attachments?.length) {
                 lessonText += `\n└─ ${lesson.attachments.length} ${plural(lesson.attachments.length, ['вложение', 'вложения', 'вложений'])}`;

@@ -28,8 +28,11 @@ module.exports = {
 
             const teachers = subgroups.lessons[lessonData.name];
             for (const teacherId of teachers) {
+                const groupName = (teacherId === 'all')
+                    ? 'Для всех'
+                    : `Группа ${subgroups.teachers[teacherId]}`;
                 inline
-                    .text(`Группа ${subgroups.teachers[teacherId]}`, `add_homework?:${userId}?:${dataId}?:${lessonIndex}?:${teacherId}`);
+                    .text(groupName, `add_homework?:${userId}?:${dataId}?:${lessonIndex}?:${teacherId}`);
             }
 
             inline

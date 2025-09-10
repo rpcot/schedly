@@ -3,7 +3,7 @@
         {
             "name": "Окно",
             "exam": "",
-            "cabinet": 0,
+            "cabinet": "-",
             "homework": [],
             "canceled": false
         }

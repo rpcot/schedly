@@ -1,51 +1,58 @@
 [
     {
         "id": "russian",
-        "name": "Русский язык"
+        "name": "Русский язык",
+        "cabinet": 22
     },
     {
         "id": "physics",
-        "name": "Физика"
+        "name": "Физика",
+        "cabinet": 38
     },
     {
         "id": "geometry",
-        "name": "Геометрия"
+        "name": "Геометрия",
+        "cabinet": 40
     },
     {
         "id": "algebra",
-        "name": "Алгебра"
-    },
-    {
-        "id": "labor",
-        "name": "Труд"
+        "name": "Алгебра",
+        "cabinet": 40
     },
     {
         "id": "literature",
-        "name": "Литература"
+        "name": "Литература",
+        "cabinet": 22
     },
     {
         "id": "english",
-        "name": "Английский язык"
+        "name": "Английский язык",
+        "cabinet": "3/возле актового зала"
     },
     {
         "id": "informatics",
-        "name": "Информатика"
+        "name": "Информатика",
+        "cabinet": "21/37"
     },
     {
         "id": "biology",
-        "name": "Биология"
+        "name": "Биология",
+        "cabinet": 20
     },
     {
         "id": "social",
-        "name": "Обществознание"
+        "name": "Обществознание",
+        "cabinet": 36
     },
     {
         "id": "history",
-        "name": "История"
+        "name": "История",
+        "cabinet": 36
     },
     {
         "id": "chemistry",
-        "name": "Химия"
+        "name": "Химия",
+        "cabinet": 17
     },
     {
         "id": "obzr",
@@ -53,30 +60,38 @@
     },
     {
         "id": "geography",
-        "name": "География"
+        "name": "География",
+        "cabinet": 42
     },
     {
         "id": "sport",
-        "name": "Физкультура"
-    },
-    {
-        "id": "schoolAssembly",
-        "name": "Торжественная линейка"
+        "name": "Физкультура",
+        "cabinet": "Спортзал"
     },
     {
         "id": "financialLiteracy",
-        "name": "Финансовая грамотность"
+        "name": "Финансовая грамотность",
+        "cabinet": 43
     },
     {
         "id": "projectActivity",
-        "name": "Проектная деятельность"
+        "name": "Проектная деятельность",
+        "cabinet": 36
     },
     {
         "id": "window",
-        "name": "Окно"
+        "name": "Окно",
+        "cabinet": "-",
+        "canceled": true
     },
     {
         "id": "classHour",
-        "name": "Классный час"
+        "name": "Классный час",
+        "cabinet": 22
+    },
+    {
+        "id": "schoolAssembly",
+        "name": "Торжественная линейка",
+        "cabinet": "Двор"
     }
 ]

@@ -96,7 +96,9 @@ module.exports = {
                 let homeworkText = ctx.msg.text.slice(0, 300);
                 if (wait.teacherId) {
                     const { teachers } = await getSubgroups();
-                    homeworkText = `группа ${teachers[wait.teacherId]}: ${homeworkText}`;
+                    homeworkText = (wait.teacherId === 'all')
+                        ? `для всех: ${homeworkText}`
+                        : `группа ${teachers[wait.teacherId]}: ${homeworkText}`;
                 }
 
                 const targetLessonData = data.lessons[wait.lessonIndex];

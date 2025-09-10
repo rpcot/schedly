@@ -27,9 +27,9 @@ module.exports = {
             const lessonData = {
                 name: lesson.name,
                 exam: "",
-                cabinet: 1,
+                cabinet: lesson.cabinet || 'Не указан',
                 homework: sameLesson?.homework || [],
-                canceled: false,
+                canceled: lesson.canceled ?? false,
             };
 
             data.lessons.splice(lessonPosition, 0, lessonData);

@@ -1,16 +1,17 @@
 {
     "lessons": {
         "Английский язык": [
-            "syraya", "natalia"
+            "syraya", "natalia", "all"
         ],
         "Информатика": [
-            "irina", "darya"
+            "irina", "darya", "all"
         ]
     },
     "teachers": {
         "syraya": "Сураи И.",
         "natalia": "Натальи В.",
         "irina": "Ирины В.",
-        "darya": "Дарьи Ю."
+        "darya": "Дарьи Ю.",
+        "all": "для всех"
     }
 }

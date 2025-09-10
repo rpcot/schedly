@@ -5,8 +5,8 @@ module.exports = {
         const text = `
         <b>🤖 Бот</b>
         • Разработчик: <a href="https://t.me/rpcotik">@rpcotik</a>
-        • Версия бота: <code>v2.2.1</code>
-        • Последнее обновление: <code>08.09.2025</code>
+        • Версия бота: <code>v2.2.2</code>
+        • Последнее обновление: <code>10.09.2025</code>
 
         <b>🌐 Сайт и API</b>
         • Сайт: <a href="https://schedule.rpcot.ru/schedule">schedule.rpcot.ru</a>
