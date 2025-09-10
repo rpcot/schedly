@@ -178,7 +178,7 @@ async function checkMsgMediaGroup(ctx, mediaGroupId) {
 
         const lessonData = day.lessons[attachmentData.lessonIndex];
 
-        if (lessonData?.attachments?.length >= 5)
+        if (lessonData?.attachments?.length >= 8)
             return void await errorAnswer(ctx, 'Для данного урока достигнуто максимальное количество вложений', {
                 deleteAfter: 5,
             });
@@ -188,16 +188,23 @@ async function checkMsgMediaGroup(ctx, mediaGroupId) {
 
         const newAttachmentData = await createAttachmentData(value, attachmentData.name, attachmentData.lessonIndex, attachmentData.dayId, { mediaGroupId });
 
-        lessonData.attachments.push({
+        const attachment = {
             id: newAttachmentData.id,
             name: newAttachmentData.name,
-        });
-        day.lessons[attachmentData.lessonIndex] = lessonData;
+        };
+
+        for (const lesson of day.lessons) {
+            if (lesson.name !== lessonData.name) continue;
+
+            lesson.attachments ??= [];
+            lesson.attachments.push(attachment);
+        }
+
         day.changed('lessons', true);
         await day.save();
 
         await sendActionLog(ctx, 'Добавлено вложение', [
-            `Значение: ${JSON.stringify({ ...value, attachmentName: newAttachmentData.attachmentName }, null, 2)}`,
+            `Значение: ${JSON.stringify({ ...value, attachmentName: newAttachmentData.attachmentName, mediaGroupId }, null, 2)}`,
             `Урок: ${lessonData.name}`,
             `Индекс урока: ${newAttachmentData.lessonIndex}`,
             `Айди дня: ${day.id}`,

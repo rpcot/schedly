@@ -15,7 +15,7 @@ module.exports = {
 
         const mediaGroupId = ctx.msg.media_group_id || null;
         if (mediaGroupId) {
-            await checkMsgMediaGroup(ctx, mediaGroupId);   
+            await checkMsgMediaGroup(ctx, mediaGroupId);
         }
 
         const { wait } = await getUserData(ctx.from.id);
@@ -193,10 +193,12 @@ module.exports = {
                     name: wait.attachmentName,
                     id: attachmentData.id,
                 };
-                if (!lessonData.attachments?.length) {
-                    lessonData.attachments = [attachment];
-                } else {
-                    lessonData.attachments.push(attachment);
+
+                for (const lesson of data.lessons) {
+                    if (lesson.name !== lessonData.name) continue;
+
+                    lesson.attachments ??= [];
+                    lesson.attachments.push(attachment);
                 }
 
                 data.changed('lessons', true);
@@ -207,7 +209,7 @@ module.exports = {
                 await showManageDay(ctx, data.weekId, data.index, { editMessageId: wait.editMessageId });
 
                 await sendActionLog(ctx, 'Добавлено вложение', [
-                    `Значение: ${JSON.stringify({ ...value, attachmentName: wait.attachmentName }, null, 2)}`,
+                    `Значение: ${JSON.stringify({ ...value, attachmentName: wait.attachmentName, mediaGroupId: attachmentData.mediaGroupId }, null, 2)}`,
                     `Урок: ${lessonData.name}`,
                     `Индекс урока: ${wait.lessonIndex}`,
                     `Айди дня: ${data.id}`,

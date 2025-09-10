@@ -24,11 +24,15 @@ module.exports = {
             
             const sameLesson = data.lessons.find((lessonData) => lessonData.name === lesson.name);
 
+            console.log(sameLesson);
+            
+
             const lessonData = {
                 name: lesson.name,
                 exam: "",
                 cabinet: lesson.cabinet || 'Не указан',
                 homework: sameLesson?.homework || [],
+                attachments: sameLesson?.attachments || [],
                 canceled: lesson.canceled ?? false,
             };
 

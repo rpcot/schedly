@@ -28,7 +28,26 @@ module.exports = {
 
             await ctx.answerCallbackQuery();
 
-            lessonData.attachments.splice(attachmentIndex, 1);
+            let index = 0;
+            for (const lesson of data.lessons) {
+                if (lesson.name !== lessonData.name) {
+                    index++;
+                    continue;
+                }
+
+                const attachment = lesson.attachments.find((data) => data.id === attachmentData.id);
+                const attachmentIndex = lesson.attachments.indexOf(attachment);
+                if (attachmentIndex === -1) {
+                    index++;
+                    continue;
+                }
+                
+                lesson.attachments.splice(attachmentIndex, 1);
+                data.lessons.splice(index, 1, lesson);
+
+                index++;
+            }
+
             data.changed('lessons', true);
             await data.save();
 

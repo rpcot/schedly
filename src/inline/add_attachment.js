@@ -14,7 +14,7 @@ module.exports = {
             return void await ctx.answerCallbackQuery('Вы не можете взаимодействовать с чужими кнопками');
         } else if (!data) {
             return void await ctx.answerCallbackQuery('Информация о выбранном дне не найдена. Пропиши команду ещё раз');
-        } else if (attachmentsCount >= 5) {
+        } else if (attachmentsCount >= 8) {
             return void await ctx.answerCallbackQuery('Для данного урока достигнуто максимальное количество вложений.');
         } else {
             await ctx.answerCallbackQuery();
