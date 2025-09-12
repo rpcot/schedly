@@ -8,7 +8,7 @@ const { sendActionLog } = require("./logging-functions");
  * @param {{
  *  fileId?: string
  *  fileUniqueId?: string
- *  fileType?: 'photo' | 'link' | 'video' | 'animation' | 'audio' | 'document' | 'voice'
+ *  fileType?: 'photo' | 'link' | 'text' | 'video' | 'animation' | 'audio' | 'document' | 'voice'
  *  content?: string
  * }} value
  * @param {string | null} name
@@ -58,8 +58,14 @@ async function getAttachmentValueFromCtx(ctx) {
     switch (true) {
         case isUrl(ctx.msg.text):
             value = {
-                content: ctx.msg.text,
+                content: ctx.msg.text.slice(0, 4000),
                 type: 'link',
+            };
+            break;
+        case !!ctx.msg.text:
+            value = {
+                content: ctx.msg.text.slice(0, 4000),
+                type: 'text',
             };
             break;
         case !!ctx.msg.photo?.length:
@@ -149,6 +155,11 @@ async function showAttachment(ctx, lessonData, attachmentId) {
                 parse_mode: 'HTML',
                 disable_web_page_preview: true,
             });
+        } else if (attachmentData.value.type === 'text') {
+            await ctx.reply(`${title}\n\n<b>Содержание:</b>\n${attachmentData.value.content}`, {
+                reply_markup: inline,
+                parse_mode: 'HTML',
+            });
         } else {
             const method = `replyWith${capitalize(attachmentData.value.type)}`;
             await ctx[method](attachmentData.value.fileId, {
@@ -210,7 +221,7 @@ async function checkMsgMediaGroup(ctx, mediaGroupId) {
             `Айди дня: ${day.id}`,
             `Айди недели: ${day.weekId}`,
         ]);
-    } catch (_) {}
+    } catch (_) { }
 }
 
 module.exports = {

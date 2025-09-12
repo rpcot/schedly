@@ -186,7 +186,7 @@ module.exports = {
 
                 const value = await getAttachmentValueFromCtx(ctx);
                 if (!value)
-                    return void await errorAnswer(ctx, 'Неизвестный тип вложения\nПоддерживаемые форматы: ссылки, фотографии, аудио- и видеофайлы, гифки, файлы, голосовые сообщения', { deleteAfter: 15 });
+                    return void await errorAnswer(ctx, 'Неизвестный тип вложения\nПоддерживаемые форматы: ссылки, текст, фотографии, аудио- и видеофайлы, гифки, файлы, голосовые сообщения', { deleteAfter: 15 });
 
                 const attachmentData = await createAttachmentData(value, wait.attachmentName, wait.lessonIndex, data.id, { mediaGroupId });
                 const attachment = {
