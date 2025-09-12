@@ -33,7 +33,7 @@ async function getData(week) {
         const lessonsEndTime = bells[indexOfLastNotCanceledLesson]?.split('-')?.[1] || 'неизвестно';
 
         day.dataValues.date = day.date;
-        day.dataValues.today = new Date().toLocaleDateString('ru-RU').slice(0, 5) === day.date;
+        day.dataValues.today = new Date().toLocaleDateString('ru-RU') === day.date;
         day.dataValues.lessonsStartTime = lessonsStartTime;
         day.dataValues.lessonsEndTime = lessonsEndTime;
 
