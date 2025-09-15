@@ -74,6 +74,11 @@
         "cabinet": 43
     },
     {
+        "id": "probabilityTheory",
+        "name": "Теория вероятности",
+        "cabinet": 40
+    },
+    {
         "id": "projectActivity",
         "name": "Проектная деятельность",
         "cabinet": 36
