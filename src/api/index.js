@@ -159,7 +159,7 @@ app.use(cors({
 // }));
 
 app.get('/', (req, res) => {
-    res.status(200).json({ ok: true, status: 200, message: 'OK', version: '2.1.0' });
+    res.status(200).json({ ok: true, status: 200, message: 'OK', version: '2.1.1' });
 });
 
 app.get('/schedule/', upload.none(), async (req, res) => {
