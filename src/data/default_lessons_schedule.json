@@ -5,12 +5,283 @@
             "exam": "",
             "cabinet": "-",
             "homework": [],
+            "canceled": true
+        },
+        {
+            "name": "Физика",
+            "exam": "",
+            "cabinet": 38,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Физкультура",
+            "exam": "",
+            "cabinet": "Спортзал",
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Биология",
+            "exam": "",
+            "cabinet": 20,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Обществознание",
+            "exam": "",
+            "cabinet": 36,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Обществознание",
+            "exam": "",
+            "cabinet": 36,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Алгебра",
+            "exam": "",
+            "cabinet": 40,
+            "homework": [],
             "canceled": false
         }
     ],
-    [],
-    [],
-    [],
-    [],
-    []
+    [
+        {
+            "name": "Окно",
+            "exam": "",
+            "cabinet": "-",
+            "homework": [],
+            "canceled": true
+        },
+        {
+            "name": "Русский язык",
+            "exam": "",
+            "cabinet": 22,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Алгебра",
+            "exam": "",
+            "cabinet": 40,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "История",
+            "exam": "",
+            "cabinet": 36,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "История",
+            "exam": "",
+            "cabinet": 36,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "ОБЗР",
+            "exam": "",
+            "cabinet": 17,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Теория вероятности",
+            "exam": "",
+            "cabinet": 40,
+            "homework": [],
+            "canceled": false
+        }
+    ],
+    [
+        {
+            "name": "Биология",
+            "exam": "",
+            "cabinet": 20,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Биология",
+            "exam": "",
+            "cabinet": 20,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Информатика",
+            "exam": "",
+            "cabinet": "21/37",
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Геометрия",
+            "exam": "",
+            "cabinet": 40,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Русский язык",
+            "exam": "",
+            "cabinet": 22,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Литература",
+            "exam": "",
+            "cabinet": 22,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "ППРМЗ",
+            "exam": "",
+            "cabinet": 40,
+            "homework": [],
+            "canceled": false
+        }
+    ],
+    [
+        {
+            "name": "Физкультура",
+            "exam": "",
+            "cabinet": "Спортзал",
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Физкультура",
+            "exam": "",
+            "cabinet": "Спортзал",
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Обществознание",
+            "exam": "",
+            "cabinet": 36,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Обществознание",
+            "exam": "",
+            "cabinet": 36,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "География",
+            "exam": "",
+            "cabinet": 42,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Литература",
+            "exam": "",
+            "cabinet": 22,
+            "homework": [],
+            "canceled": false
+        }
+    ],
+    [
+        {
+            "name": "Физика",
+            "exam": "",
+            "cabinet": 38,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Английский язык",
+            "exam": "",
+            "cabinet": "3/возле актового зала",
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Английский язык",
+            "exam": "",
+            "cabinet": "3/возле актового зала",
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Геометрия",
+            "exam": "",
+            "cabinet": 40,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Проектная деятельность",
+            "exam": "",
+            "cabinet": 36,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Химия",
+            "exam": "",
+            "cabinet": 17,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Финансовая грамотность",
+            "exam": "",
+            "cabinet": 43,
+            "homework": [],
+            "canceled": false
+        }
+    ],
+    [
+        {
+            "name": "История",
+            "exam": "",
+            "cabinet": 36,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Право",
+            "exam": "",
+            "cabinet": 36,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Литература",
+            "exam": "",
+            "cabinet": 22,
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Английский язык",
+            "exam": "",
+            "cabinet": "3/возле актового зала",
+            "homework": [],
+            "canceled": false
+        },
+        {
+            "name": "Литература",
+            "exam": "",
+            "cabinet": 22,
+            "homework": [],
+            "canceled": false
+        }
+    ]
 ]

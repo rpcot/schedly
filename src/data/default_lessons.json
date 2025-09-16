@@ -20,6 +20,11 @@
         "cabinet": 40
     },
     {
+        "id": "pprmz",
+        "name": "ППРМЗ",
+        "cabinet": 40
+    },
+    {
         "id": "literature",
         "name": "Литература",
         "cabinet": 22
@@ -47,6 +52,16 @@
     {
         "id": "history",
         "name": "История",
+        "cabinet": 36
+    },
+    {
+        "id": "siberianHistory",
+        "name": "История Сибири",
+        "cabinet": 36
+    },
+    {
+        "id": "pravo",
+        "name": "Право",
         "cabinet": 36
     },
     {
