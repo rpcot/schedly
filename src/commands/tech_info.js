@@ -2,15 +2,21 @@ module.exports = {
     name: 'tech_info',
     description: 'Техническая информация о боте',
     async execute(bot, ctx) {
-        const text = `
-        <b>🤖 Бот</b>
-        • Разработчик: <a href="https://t.me/rpcotik">@rpcotik</a>
-        • Версия бота: <code>v2.2.5</code>
-        • Последнее обновление: <code>17.09.2025</code>
+        const text = `<b>💡 Разработчик</b>
+        • <a href="https://t.me/rpcotik">@rpcotik</a>
 
-        <b>🌐 Сайт и API</b>
+        <b>🤖 Бот</b>
+        • Бот: <a href="https://t.me/raspisssanie_bot">SCHEDLY</a>
+        • Версия бота: <code>v2.3.0</code>
+        • Последнее обновление: <code>19.09.2025</code>
+
+        <b>🌐 Сайт</b>
         • Сайт: <a href="https://schedule.rpcot.ru/schedule">schedule.rpcot.ru</a>
         • Версия сайта: <code>v2.2.0</code>
+        • Последнее обновление: <code>08.09.2025</code>
+        
+        <b>🧩 API</b>
+        • API: <a href="https://api.schedule.rpcot.ru">api.schedule.rpcot.ru</a>
         • Версия API: <code>v2.2.1</code>
         • Последнее обновление: <code>12.09.2025</code>
 
@@ -19,7 +25,7 @@ module.exports = {
         • Версия Node.js: <code>${process.version}</code>
         • База данных: <code>MySQL</code>
 
-        <b>📂 Репозиторий</b>
+        <b>📂 GitHub</b>
         • https://github.com/rpcot/schedly
         `.replace(/  +/g, '');
 
