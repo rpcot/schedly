@@ -46,6 +46,7 @@ module.exports = {
     developerId: -1, // telegram id of developer
 
     loggingChannelId: -1, // telegram id of logging channel
+    generalChannelId: -1, // telegram id of general channel
 
     dayNames: [
         'Понедельник',

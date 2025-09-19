@@ -1,7 +1,7 @@
 const { InlineKeyboard } = require("grammy");
 const { Days } = require("../models");
 const { getDayScheduleById, showManageDay } = require("../utils/schedule-functions");
-const { sendActionLog } = require("../utils/logging-functions");
+const { sendActionLog, sendChangeCabinetTodayLog } = require("../utils/logging-functions");
 
 module.exports = {
     data: 'change_cabinet',
@@ -19,7 +19,7 @@ module.exports = {
 
         if (newCabinet) {
             const oldCabinet = data.lessons[parseInt(lessonIndex)].cabinet;
-            
+
             data.lessons[parseInt(lessonIndex)].cabinet = (newCabinet === '{english}')
                 ? '3/возле актового зала'
                 : newCabinet;
@@ -27,6 +27,10 @@ module.exports = {
             await showManageDay(ctx, data.weekId, data.index);
 
             const lessonData = data.lessons[parseInt(lessonIndex)];
+
+            if (data.date === new Date().toLocaleDateString('ru-RU')) {
+                await sendChangeCabinetTodayLog(ctx, lessonData, oldCabinet);
+            }
 
             await sendActionLog(ctx, 'Изменён кабинет', [
                 `Старый кабинет: ${oldCabinet}`,
@@ -38,7 +42,7 @@ module.exports = {
             ]);
         } else {
             const inline = new InlineKeyboard();
-            
+
             const cabinets = [
                 1, 2, '3а', '3б', '4а', '4б', 5, 6, 7, 8, 9, 10,
                 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -64,7 +68,7 @@ module.exports = {
             inline
                 .row()
                 .text('Вернуться', `choose_lesson?:${userId}?:${dataId}?:change_cabinet`);
-            
+
             await ctx.editMessageText('Выбери новый кабинет:', {
                 reply_markup: inline,
             });
