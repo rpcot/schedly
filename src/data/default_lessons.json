@@ -110,6 +110,11 @@
         "cabinet": 22
     },
     {
+        "id": "unplannedEvent",
+        "name": "Внеплановое событие",
+        "cabinet": "-"
+    },
+    {
         "id": "schoolAssembly",
         "name": "Торжественная линейка",
         "cabinet": "Двор"

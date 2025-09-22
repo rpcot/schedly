@@ -1,4 +1,4 @@
-const { loggingChannelId, generalChannelId } = require('../config');
+const { loggingChannelId, generalChannelId, dayNames } = require('../config');
 
 async function sendActionLog(ctx, text, params = []) {
     const bot = require('../index');
@@ -34,7 +34,23 @@ async function sendChangeCabinetTodayLog(ctx, lessonData, oldCabinet) {
     }
 }
 
+async function sendChangeDayNoteLog(ctx, day) {
+    const bot = require('../index');
+
+    try {
+        const text = `🔖 Добавлено примечание на <b>${dayNames[day.index]}</b> (<b>${day.date}</b>):
+        <b>${day.note}</b>`.replace(/  +/g, '');
+
+        await ctx.api.sendMessage(generalChannelId, text, {
+            parse_mode: 'HTML',
+        });
+    } catch (error) {
+        bot.logger.error(`Возникла ошибка при отправке оповещения о добавлении примечания на день:\n${error.stack}`, { ctx, day })
+    }
+}
+
 module.exports = {
     sendActionLog,
     sendChangeCabinetTodayLog,
+    sendChangeDayNoteLog,
 };

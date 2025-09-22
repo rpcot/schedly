@@ -2,7 +2,7 @@ const { InlineKeyboard } = require("grammy");
 const { developerId } = require("../config");
 const { Days } = require("../models");
 const { createAttachmentData, getAttachmentByMediaGroupId, getAttachmentValueFromCtx, checkMsgMediaGroup } = require("../utils/attachments-functions");
-const { sendActionLog } = require("../utils/logging-functions");
+const { sendActionLog, sendChangeDayNoteLog } = require("../utils/logging-functions");
 const { getDayScheduleById, showManageDay, getSubgroups } = require("../utils/schedule-functions");
 const { getUserData, setWait } = require("../utils/users-functions");
 const { errorAnswer } = require("../utils/utils");
@@ -41,6 +41,8 @@ module.exports = {
                 await showManageDay(ctx, data.weekId, data.index, { editMessageId: wait.editMessageId });
 
                 await setWait(ctx.from.id, {});
+
+                await sendChangeDayNoteLog(ctx, data);
 
                 await sendActionLog(ctx, 'Добавлено примечание', [
                     `Текст: ${data.note}`,
