@@ -184,3 +184,28 @@ nav {
         opacity: 1;
     }
 }
+
+#monday-card,
+#tuesday-card,
+#wednesday-card,
+#thursday-card,
+#friday-card,
+#saturday-card {
+  scroll-margin-top: 70px;
+}
+
+@supports (-webkit-touch-callout: none) {
+    body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        background-color: rgb(18, 18, 18);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        background-color: rgb(18, 18, 18);
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+    }
+}

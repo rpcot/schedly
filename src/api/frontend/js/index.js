@@ -119,6 +119,7 @@ async function fetchDays() {
             const weekText = document.getElementById('week-text');
             weekText.innerText = `неделю ${data.data.week.date}`;
 
+            let todayDayId = null;
             for (const day of data.data.days) {
                 const dayId = dayIds[day.index];
 
@@ -135,6 +136,7 @@ async function fetchDays() {
                 if (day.today) {
                     card.classList.add('current-day');
                     currentDayText.innerText = '(сегодня)';
+                    todayDayId = dayId;
                 }
 
                 if (day.note) {
@@ -192,6 +194,14 @@ async function fetchDays() {
                         lessons.innerHTML = lessonsHTML;
                     }
                 }
+            }
+
+            if (todayDayId) {
+                const todayDayCard = document.getElementById(`${todayDayId}-card`);
+                todayDayCard.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                });
             }
         })
         .catch(error => {
