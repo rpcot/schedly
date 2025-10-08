@@ -17,8 +17,8 @@ module.exports = {
         
         <b>🧩 API</b>
         • API: <a href="https://api.schedule.rpcot.ru">api.schedule.rpcot.ru</a>
-        • Версия API: <code>v2.2.1</code>
-        • Последнее обновление: <code>12.09.2025</code>
+        • Версия API: <code>v2.2.2</code>
+        • Последнее обновление: <code>08.10.2025</code>
 
         <b>🛠 Стек технологий</b>
         • Язык программирования: <code>JavaScript</code> (+ CSS, HTML)

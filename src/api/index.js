@@ -222,7 +222,11 @@ app.get('/attachment/:id', upload.none(), async (req, res) => {
         res.send(buffer);
     } catch (e) {
         console.error(e);
-        res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
+        if (e.message.includes('file is too big')) {
+            res.status(500).send('Не удалось скачать вложение. Пожалуйста, попробуйте сделать это через бота с помощью команды /today или /tomorrow.');
+        } else {
+            res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
+        }
     }
 });
 
