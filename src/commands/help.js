@@ -1,4 +1,3 @@
-const { Keyboard } = require("grammy");
 const { getUserData, getGeneralMenuKeyboard } = require("../utils/users-functions");
 
 module.exports = {
@@ -37,6 +36,7 @@ module.exports = {
             text += `\n<b>💻 Разработчик</b>
             • <b>/set_prefix</b> - Установить роль пользователю
             • <b>/user_manage</b> - Управление пользователем
+            • <b>/admins</b> - Посмотреть список админов
             `.replace(/  +/g, '');
         }
 

@@ -2,6 +2,8 @@ const { InlineKeyboard, Keyboard } = require("grammy");
 const { Users } = require("../models");
 const { developerId } = require("../config");
 const { errorAnswer } = require("./utils");
+const { getChatMember } = require("./chat-functions");
+const { getDefaultPrefixes } = require("./prefixes-functions");
 
 async function getUserData(userId) {
     const bot = require('../index');
@@ -199,6 +201,49 @@ async function getGeneralMenuKeyboard(userId) {
     return keyboard;
 }
 
+async function getAllAdmins() {
+    const bot = require('../index');
+
+    const users = await Users.findAll({
+        where: {
+            group: ['admin', 'developer'],
+        },
+    });
+
+    bot.logger.info('Запрос списка админов', { users });
+
+    return users;
+}
+
+async function showAdminsList(ctx) {
+    const admins = await getAllAdmins();
+
+    let text = '';
+    let num = 1;
+    for (const admin of admins) {
+        const prefixes = getDefaultPrefixes();
+        const prefix = prefixes[admin.group];
+
+        const chatMember = await getChatMember(admin.userId);
+        
+        if (chatMember) {
+            const nickname = (chatMember.user.username)
+                ? `@${chatMember.user.username}`
+                : `${chatMember.user.first_name} ${chatMember.user.last_name ?? ''}`.trim();
+
+            text += `${num}. <b>${nickname}</b> [<code>${admin.userId}</code>] - ${prefix}\n`;
+        } else {
+            text += `${num}. <code>${admin.userId}</code> - ${prefix}\n`;
+        }
+
+        num++;
+    }
+
+    await ctx.reply(text || 'Список пуст', {
+        parse_mode: 'HTML',
+    });
+}
+
 module.exports = {
     getUserData,
     setWait,
@@ -210,4 +255,5 @@ module.exports = {
     answerGoAdminRequest,
     showUserManagePanel,
     getGeneralMenuKeyboard,
+    showAdminsList,
 };
