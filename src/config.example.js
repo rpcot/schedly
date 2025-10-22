@@ -29,7 +29,7 @@ module.exports = {
         password: DB_PASSWORD,
         modelsPath: join(__dirname, 'models'),
     },
-    
+
     eventsPath: join(__dirname, 'events'),
     commandsPath: join(__dirname, 'commands'),
     inlinePath: join(__dirname, 'inline'),
@@ -38,6 +38,7 @@ module.exports = {
     defaultBellsPath: join(__dirname, 'data', 'default_bells.json'),
     defaultPrefixesPath: join(__dirname, 'data', 'default_prefixes.json'),
     defaultLessonsPath: join(__dirname, 'data', 'default_lessons.json'),
+    changelogConfigPath: join(__dirname, 'data', 'changelog_config.json'),
 
     logsPath: join(resolve(__dirname, '..'), 'logs'),
     consoleLogging: true, // logging to console

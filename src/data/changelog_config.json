@@ -1,0 +1,34 @@
+{
+    "types": {
+        "hotfix": {
+            "id": "hotfix",
+            "name": "Хотфикс"
+        },
+        "patch": {
+            "id": "patch",
+            "name": "Небольшое обновление"
+        },
+        "minor": {
+            "id": "minor",
+            "name": "Обычное обновление"
+        },
+        "major": {
+            "id": "major",
+            "name": "Крупное обновление"
+        }
+    },
+    "systems": {
+        "bot": {
+            "id": "bot",
+            "name": "Бот"
+        },
+        "api": {
+            "id": "api",
+            "name": "API"
+        },
+        "website": {
+            "id": "website",
+            "name": "Сайт"
+        }
+    }
+}

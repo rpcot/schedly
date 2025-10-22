@@ -5,7 +5,8 @@ const { createAttachmentData, getAttachmentByMediaGroupId, getAttachmentValueFro
 const { sendActionLog, sendChangeDayNoteLog } = require("../utils/logging-functions");
 const { getDayScheduleById, showManageDay, getSubgroups } = require("../utils/schedule-functions");
 const { getUserData, setWait } = require("../utils/users-functions");
-const { errorAnswer } = require("../utils/utils");
+const { errorAnswer, isUrl } = require("../utils/utils");
+const { createTempChangelogEntry, updateTempChangelogEntry, getTempChangelogById, getChangelogsConfig, showTempChangelog } = require("../utils/changelog-functions");
 
 module.exports = {
     name: 'msg',
@@ -217,6 +218,197 @@ module.exports = {
                     `Айди дня: ${data.id}`,
                     `Айди недели: ${data.weekId}`,
                 ]);
+            } else if (wait.id === 'changelog_name') {
+                try {
+                    await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id);
+                } catch (_) { }
+
+                if (!ctx.msg.text)
+                    return void await errorAnswer(ctx, `Сообщение должно содержать текст`, { deleteAfter: 5 });
+
+                const title = ctx.msg.text.slice(0, 255);
+
+                const { id, data } = createTempChangelogEntry();
+                data.title = title;
+                updateTempChangelogEntry(id, data);
+
+                await setWait(ctx.from.id, { ...wait, id: 'changelog_version', tempChangelogId: id });
+
+                const inline = new InlineKeyboard()
+                    .text('Отменить', 'cancel');
+
+                await ctx.api.editMessageText(ctx.chat.id, wait.editMessageId, 'Укажи глобальную версию', {
+                    reply_markup: inline,
+                });
+            } else if (wait.id === 'changelog_version') {
+                try {
+                    await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id);
+                } catch (_) { }
+
+                if (!ctx.msg.text)
+                    return void await errorAnswer(ctx, `Сообщение должно содержать текст`, { deleteAfter: 5 });
+
+                const version = ctx.msg.text;
+
+                if (!/^v\d+\.\d+\.\d+$/.test(version))
+                    return void await errorAnswer(ctx, `Версия должна быть вида v1.0.0`, { deleteAfter: 5 });
+
+                const data = getTempChangelogById(wait.tempChangelogId);
+                data.version = version;
+                updateTempChangelogEntry(wait.tempChangelogId, data);
+
+                await setWait(ctx.from.id, { ...wait, id: 'changelog_date' });
+
+                const inline = new InlineKeyboard()
+                    .text('Отменить', 'cancel');
+
+                const text = `Укажи дату ченджлога в формате <code>YYYY-MM-DDThh:mm:ss+03:00</code>
+                (Сегодня: <code>${new Date().toISOString()}</code>)`
+                    .replace(/  +/g, '');
+
+                await ctx.api.editMessageText(ctx.chat.id, wait.editMessageId, text, {
+                    reply_markup: inline,
+                    parse_mode: 'HTML',
+                });
+            } else if (wait.id === 'changelog_date') {
+                try {
+                    await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id);
+                } catch (_) { }
+
+                if (!ctx.msg.text)
+                    return void await errorAnswer(ctx, `Сообщение должно содержать текст`, { deleteAfter: 5 });
+
+                const date = new Date(ctx.msg.text);
+
+                if (date == 'Invalid Date')
+                    return void await errorAnswer(ctx, `Дата должна быть вида YYYY-MM-DDThh:mm:ss+hh:mm`, { deleteAfter: 5 });
+
+                const data = getTempChangelogById(wait.tempChangelogId);
+                data.date = date;
+                updateTempChangelogEntry(wait.tempChangelogId, data);
+
+                await setWait(ctx.from.id, {});
+
+                const changelogData = await getChangelogsConfig();
+
+                const inline = new InlineKeyboard();
+
+                for (const type of Object.values(changelogData.types)) {
+                    inline
+                        .text(type.name, `changelog?:${wait.tempChangelogId}?:set_type?:${type.id}`)
+                        .row();
+                }
+
+                inline
+                    .text('Отменить', 'cancel');
+
+                await ctx.api.editMessageText(ctx.chat.id, wait.editMessageId, 'Выбери тип ченджлога', {
+                    reply_markup: inline,
+                });
+            } else if (wait.id === 'changelog_add_body_version') {
+                try {
+                    await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id);
+                } catch (_) { }
+
+                if (!ctx.msg.text)
+                    return void await errorAnswer(ctx, `Сообщение должно содержать текст`, { deleteAfter: 5 });
+
+                const version = ctx.msg.text;
+
+                if (!/^v\d+\.\d+\.\d+$/.test(version))
+                    return void await errorAnswer(ctx, `Версия должна быть вида v1.0.0`, { deleteAfter: 5 });
+
+                const data = getTempChangelogById(wait.tempChangelogId);
+                data.body.find((system) => system.systemId === wait.systemId).version = version;
+                updateTempChangelogEntry(wait.tempChangelogId, data);
+
+                await setWait(ctx.from.id, { ...wait, id: 'changelog_add_body' });
+
+                const inline = new InlineKeyboard()
+                    .text('Подтвердить', `changelog?:${wait.tempChangelogId}?:confirm_system?:${wait.systemId}`)
+                    .row()
+                    .text('Отменить', `changelog?:${wait.tempChangelogId}?:cancel`);
+
+                await ctx.api.editMessageText(ctx.chat.id, wait.editMessageId, 'Напиши изменения в системе', {
+                    reply_markup: inline,
+                });
+            } else if (wait.id === 'changelog_add_body') {
+                try {
+                    await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id);
+                } catch (_) { }
+
+                if (!ctx.msg.text)
+                    return void await errorAnswer(ctx, `Сообщение должно содержать текст`, { deleteAfter: 5 });
+
+                const body = ctx.msg.text.slice(0, 500);
+
+                const data = getTempChangelogById(wait.tempChangelogId);
+
+                const systemItems = data.body.find((system) => system.systemId === wait.systemId).items;
+
+                systemItems.push(body);
+                updateTempChangelogEntry(wait.tempChangelogId, data);
+
+                const text = `Напиши изменения в системе\n• ${systemItems.join('\n• ')}`;
+
+                const inline = new InlineKeyboard()
+                    .text('Подтвердить', `changelog?:${wait.tempChangelogId}?:confirm_system?:${wait.systemId}`)
+                    .row()
+                    .text('Отменить', `changelog?:${wait.tempChangelogId}?:cancel`);
+
+                await ctx.api.editMessageText(ctx.chat.id, wait.editMessageId, text, {
+                    parse_mode: 'HTML',
+                    reply_markup: inline,
+                });
+
+                const msg = await ctx.reply(`<b>Добавлено:</b>\n${body}`, {
+                    parse_mode: 'HTML',
+                });
+
+                setTimeout(async () => {
+                    await ctx.api.deleteMessage(ctx.chat.id, msg.message_id)
+                        .catch(() => { });
+                }, 10 * 1000);
+            } else if (wait.id === 'changelog_add_image_name') {
+                try {
+                    await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id);
+                } catch (_) { }
+
+                if (!ctx.msg.text)
+                    return void await errorAnswer(ctx, `Сообщение должно содержать текст`, { deleteAfter: 5 });
+
+                const name = ctx.msg.text.slice(0, 255);
+
+                const data = getTempChangelogById(wait.tempChangelogId);
+                data.images.push({ name, url: null });
+                updateTempChangelogEntry(wait.tempChangelogId, data);
+
+                await setWait(ctx.from.id, { ...wait, id: 'changelog_add_image_url', imageIndex: data.images.length - 1 });
+
+                const inline = new InlineKeyboard()
+                    .text('Отменить', `changelog?:${wait.tempChangelogId}?:cancel`);
+
+                await ctx.api.editMessageText(ctx.chat.id, wait.editMessageId, 'Отправь ссылку на изображение', {
+                    reply_markup: inline,
+                });
+            } else if (wait.id === 'changelog_add_image_url') {
+                try {
+                    await ctx.api.deleteMessage(ctx.chat.id, ctx.msg.message_id);
+                } catch (_) { }
+
+                if (!ctx.msg.text)
+                    return void await errorAnswer(ctx, `Сообщение должно содержать текст`, { deleteAfter: 5 });
+
+                const url = ctx.msg.text;
+
+                if (!isUrl(url))
+                    return void await errorAnswer(ctx, `Ссылка должна быть валидной`, { deleteAfter: 5 });
+
+                const data = getTempChangelogById(wait.tempChangelogId);
+                data.images[wait.imageIndex].url = url;
+                updateTempChangelogEntry(wait.tempChangelogId, data);
+
+                await showTempChangelog(ctx, data, { editMessageId: wait.editMessageId });
             }
         }
 

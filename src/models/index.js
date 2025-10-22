@@ -1,6 +1,7 @@
 const Days = require('./Days');
 const Weeks = require('./Weeks');
 const Attachments = require('./Attachments');
+const Changelogs = require('./Changelogs');
 
 Weeks.hasMany(Days, {
     foreignKey: 'weekId',
@@ -26,6 +27,7 @@ module.exports = {
     Weeks,
     Days,
     Attachments,
+    Changelogs,
     Settings: require('./Settings'),
     Users: require('./Users'),
 };

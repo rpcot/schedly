@@ -9,11 +9,10 @@
     <link rel="stylesheet" href="../css/index.css">
     <link rel="icon" href="https://api.rpcot.ru/images/rasp-logo">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <title>SCHEDLY - 404</title>
-    <meta property="og:title" content="404 Не найдено" />
-    <meta property="og:description" content="Запрашиваемая страница не найдена" />
+    <title>SCHEDLY</title>
+    <meta property="og:title" content="Список изменений" />
     <meta property="og:image" content="https://api.rpcot.ru/images/rasp-logo" />
-    <meta property="og:url" content="https://schedule.rpcot.ru/" />
+    <meta property="og:url" content="https://schedule.rpcot.ru/changelog" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="SCHEDLY" />
     <meta property="og:locale" content="ru_RU" />
@@ -60,23 +59,36 @@
             </nav>
         </header>
         <main>
-            <div class="container d-flex align-items-center justify-content-center min-vh-100">
-                <div class="card mt-5 mb-5 rounded-4 shadow-sm bg-card card-fix text">
-                    <div class="card-header py-3">
-                        <h1 class="my-0 text-center">404 Не найдено</h1>
-                    </div>
-                    <hr>
-                    <div class="card-body">
-                        <h3 class="card-title">Ошибка</h3>
-                        <hr class="short-line">
-                        <h5 class="card-text fw-light">
-                            По вашему запросу ничего не найдено.
-                        </h5>
-                        <h5>
-                            <a href="/info" class="link">На главную</a>
-                        </h5>
+            <div class="container d-flex flex-column align-items-center min-vh-100"
+                style="padding-top: 80px !important;">
+
+                <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen">
+                        <div class="modal-content bg-black border-0">
+                            <button id="closeModalBtn" class="close-modal-btn">
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+                                </svg>
+                            </button>
+                            <div
+                                class="modal-body d-flex justify-content-center align-items-center p-0 overflow-hidden">
+                                <img id="modalImage" src="" alt="Preview" class="zoomable-image">
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <div class="card mb-3 rounded-4 shadow-sm bg-card card-fix text">
+                    <div class="card-header py-3">
+                        <h4 class="my-0 text-center">Список изменений</h4>
+                    </div>
+                </div>
+
+                <div class="spinner-border text-purple" role="status" id="spinner">
+                    <span class="visually-hidden">Получение данных...</span>
+                </div>
+
             </div>
         </main>
     </div>
@@ -84,5 +96,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+<script src="../js/changelog.js"></script>
+<script src="../js/image-modal.js"></script>
 
 </html>

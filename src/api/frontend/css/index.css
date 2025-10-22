@@ -9,7 +9,7 @@
     border: 2px solid rgb(189, 86, 245, 0.3);
 }
 
-.current-day {
+.glowing-card {
     transition: box-shadow 0.2s ease, color 0.2s ease !important;
     box-shadow: 0 0 20px rgba(189, 86, 245, 0.5) !important;
 }
@@ -45,6 +45,10 @@
 .text {
     color: rgb(233, 233, 233) !important;
     transition: background-color 0.2s ease, color 0.2s ease !important;
+}
+
+.text-purple {
+    color: rgba(186, 57, 255, 0.6);
 }
 
 .link {
@@ -161,37 +165,159 @@ nav {
     padding: 5px;
 }
 
-.skeleton {
-    display: inline-block;
-    border-radius: 8px;
-    background: rgb(69, 69, 71);
-    width: 200px;
-    height: 20px;
-    margin: 10px 0;
-    animation: pulse 1.5s infinite ease-in-out;
-}
-
-@keyframes pulse {
-    0% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.5;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
 #monday-card,
 #tuesday-card,
 #wednesday-card,
 #thursday-card,
 #friday-card,
-#saturday-card {
-  scroll-margin-top: 70px;
+#saturday-card,
+.update-card {
+    scroll-margin-top: 70px;
+}
+
+.badge+.badge {
+    margin-left: 0.25rem;
+}
+
+.badges-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.version-badge {
+    font-size: 1rem;
+}
+
+.system-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+ul {
+    padding-left: 1.1rem;
+    margin-bottom: 0rem;
+}
+
+ul li {
+    margin-bottom: 0.25rem;
+}
+
+.update-image-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.update-image {
+    flex: 0 0 calc((100% - 20px) / 3);
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.update-image:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.zoomable-image {
+    max-width: 100%;
+    max-height: 100%;
+    transition: transform 0.2s ease;
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
+.modal-content {
+    background: black;
+}
+
+.modal-body {
+    background: black;
+}
+
+body.modal-open {
+    overflow: hidden;
+    padding-right: 0 !important;
+}
+
+.update-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.close-modal-btn {
+    position: fixed;
+    top: 10px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.copy-link-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.close-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.copy-link-btn:hover {
+    color: #0d6efd;
+}
+
+.close-modal-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+@media (max-width: 576px) {
+    .close-modal-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .update-image {
+        flex: 1 1 calc(50% - 10px);
+    }
+}
+
+@media (max-width: 576px) {
+    .update-image {
+        flex: 1 1 100%;
+    }
 }
 
 @supports (-webkit-touch-callout: none) {

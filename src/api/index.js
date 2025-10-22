@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
-const { token, apiPort, apiHost, defaultBellsPath, weekUrlTemplate, attachmentUrlTemplate } = require('../config');
-const { Weeks, Attachments } = require('../models');
+const { token, apiPort, apiHost, defaultBellsPath, weekUrlTemplate, attachmentUrlTemplate, changelogConfigPath } = require('../config');
+const { Weeks, Attachments, Changelogs } = require('../models');
 const { readFileSync } = require('fs');
 const { Bot } = require('grammy');
 
@@ -10,6 +10,10 @@ const bot = new Bot(token);
 
 function getDefaultBells() {
     return JSON.parse(readFileSync(defaultBellsPath, 'utf-8'));
+}
+
+function getChangelogsConfig() {
+    return JSON.parse(readFileSync(changelogConfigPath, 'utf-8'));
 }
 
 async function getData(week) {
@@ -128,6 +132,27 @@ async function getCurrentWeek() {
     return data;
 }
 
+async function getAllChangelogs() {
+    const changelogsData = await Changelogs.findAll({
+        attributes: [
+            'id', 'version', 'title', 'type',
+            'type', 'involvedSystems', 'body',
+            'images', 'date',
+        ],
+        raw: true,
+        order: [['date', 'DESC']],
+    });
+
+    const { systems } = getChangelogsConfig();
+
+    return changelogsData.map((data) => {
+        data.body = data.body.map((system) => {
+            return { ...system, name: systems[system.systemId].name };
+        });
+        return data;
+    });
+}
+
 async function getAttachment(id) {
     const attachmentData = await Attachments.findByPk(id);
 
@@ -153,10 +178,7 @@ app.use(cors({
     origin: 'https://schedule.rpcot.ru',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
-// app.use(cors({
-//     origin: 'http://127.0.0.1:3000',
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-// }));
+// app.use(cors());
 
 app.get('/', (req, res) => {
     res.status(200).json({ ok: true, status: 200, message: 'OK', version: '2.1.1' });
@@ -227,6 +249,21 @@ app.get('/attachment/:id', upload.none(), async (req, res) => {
         } else {
             res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
         }
+    }
+});
+
+app.get('/changelogs', upload.none(), async (req, res) => {
+    try {
+        const data = await getAllChangelogs();
+
+        res.status(200).json({
+            ok: true,
+            status: 200,
+            data,
+        });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
     }
 });
 
