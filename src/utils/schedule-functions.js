@@ -1,8 +1,8 @@
-const { InlineKeyboard, Keyboard } = require('grammy');
+const { InlineKeyboard } = require('grammy');
 const { dayNames, defaultLessonsSchedulePath, defaultBellsPath, defaultLessonsPath, subgroupsPath } = require('../config');
 const { Days, Weeks } = require('../models');
 const { getSettings } = require('./settings-functions');
-const { getTimestampFromDate, getTimestamp, plural } = require('./utils');
+const { getTimestampFromDate, getTimestamp, plural, errorAnswer } = require('./utils');
 const { readFileSync } = require('fs');
 
 function getDefaultLessonsSchedule() {
@@ -152,6 +152,60 @@ function getDayScheduleText(data, dayOfWeek) {
 
 }
 
+function findNearestLesson(lessonName) {
+    const days = getDefaultLessonsSchedule();
+
+    const occurrences = days
+        .map((lessons, dayIndex) => {
+            const lessonIdx = lessons.findIndex(lesson => lesson.name === lessonName);
+            return lessonIdx !== -1 ? { dayIndex, lessonIndex: lessonIdx } : null;
+        })
+        .filter(Boolean);
+
+    if (occurrences.length === 0)
+        return null;
+
+    const todayIndex = new Date().getDay() - 1;
+
+    const targetOccurrence = occurrences.find(({ dayIndex }) => dayIndex > todayIndex);
+
+    const nextOccurrence = targetOccurrence
+        ? {
+            currentWeek: true,
+            dayIndex: targetOccurrence.dayIndex,
+            lessonIndex: targetOccurrence.lessonIndex,
+        }
+        : {
+            currentWeek: false,
+            dayIndex: occurrences[0].dayIndex,
+            lessonIndex: occurrences[0].lessonIndex,
+        };
+
+    console.log(nextOccurrence);
+
+    return nextOccurrence;
+}
+
+function generateSelectTeacherIdInline(lessonName, confirmInlineId, cancelInlineId) {
+    const subgroups = getSubgroups();
+
+    const inline = new InlineKeyboard();
+
+    const teachers = subgroups.lessons[lessonName];
+    for (const teacherId of teachers) {
+        const groupName = (teacherId === 'all')
+            ? 'Для всех'
+            : `Группа ${subgroups.teachers[teacherId]}`;
+        inline.text(groupName, confirmInlineId.replace('[teacherId]', teacherId));
+    }
+
+    inline
+        .row()
+        .text('Отменить', cancelInlineId);
+
+    return inline;
+}
+
 async function getDayScheduleById(id) {
     const bot = require('../index');
 
@@ -170,6 +224,26 @@ async function getDaySchedule(dayOfWeek, weekId) {
     });
 
     bot.logger.info(`Запрос расписания на день`, { data, dayOfWeek, weekId });
+
+    return data;
+}
+
+async function getNearestDayByIndex(dayIndex, currentWeek) {
+    const bot = require('../index');
+
+    let targetWeek = null;
+    if (currentWeek) {
+        targetWeek = await getCurrentWeek();
+    } else {
+        targetWeek = await getNextWeek();
+    }
+    const weekId = targetWeek.id;
+
+    const data = await Days.findOne({
+        where: { index: dayIndex, weekId },
+    });
+
+    bot.logger.info(`Запрос дня по индексу`, { data, dayIndex, weekId });
 
     return data;
 }
@@ -591,13 +665,44 @@ async function sendBotSiteURL(ctx) {
 
 }
 
+async function addHomeworkToLesson(data, targetLessonIndex, homework, { teacherId } = {}) {
+    let homeworkText = homework.slice(0, 300);
+    if (teacherId) {
+        const { teachers } = getSubgroups();
+        homeworkText = (teacherId === 'all')
+            ? `для всех: ${homeworkText}`
+            : `группа ${teachers[teacherId]}: ${homeworkText}`;
+    }
+
+    const targetLessonData = data.lessons[targetLessonIndex];
+
+    for (const lesson of data.lessons) {
+        if (lesson.name === targetLessonData.name && lesson.homework.length < 3) {
+            lesson.homework.push(homeworkText);
+        }
+    }
+    await Days.update({ lessons: data.lessons }, { where: { id: data.id } });
+
+    return data.lessons;
+}
+
+async function addExamToLesson(data, targetLessonIndex, exam) {
+    data.lessons[targetLessonIndex].exam = exam.slice(0, 100);
+    await Days.update({ lessons: data.lessons }, { where: { id: data.id } });
+
+    return data.lessons[targetLessonIndex];
+}
+
 module.exports = {
     getDefaultLessonsSchedule,
     getDefaultBells,
     getDefaultLessons,
     getSubgroups,
+    findNearestLesson,
+    generateSelectTeacherIdInline,
     getDayScheduleById,
     getDaySchedule,
+    getNearestDayByIndex,
     getLastWeek,
     getLastThreeWeeks,
     getCurrentWeek,
@@ -613,4 +718,6 @@ module.exports = {
     showLessonChoose,
     showToggleLessonChoose,
     sendBotSiteURL,
+    addHomeworkToLesson,
+    addExamToLesson,
 };

@@ -218,6 +218,7 @@ async function checkMsgMediaGroup(ctx, mediaGroupId) {
             `Значение: ${JSON.stringify({ ...value, attachmentName: newAttachmentData.attachmentName, mediaGroupId }, null, 2)}`,
             `Урок: ${lessonData.name}`,
             `Индекс урока: ${newAttachmentData.lessonIndex}`,
+            `День: ${day.date}`,
             `Айди дня: ${day.id}`,
             `Айди недели: ${day.weekId}`,
         ]);

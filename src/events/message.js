@@ -2,11 +2,12 @@ const { InlineKeyboard } = require("grammy");
 const { developerId } = require("../config");
 const { Days } = require("../models");
 const { createAttachmentData, getAttachmentByMediaGroupId, getAttachmentValueFromCtx, checkMsgMediaGroup } = require("../utils/attachments-functions");
-const { sendActionLog, sendChangeDayNoteLog } = require("../utils/logging-functions");
-const { getDayScheduleById, showManageDay, getSubgroups } = require("../utils/schedule-functions");
+const { sendActionLog, sendChangeDayNoteLog, sendAddExamLog, sendGigaChatSuggestSended } = require("../utils/logging-functions");
+const { getDayScheduleById, showManageDay, getSubgroups, addHomeworkToLesson, addExamToLesson } = require("../utils/schedule-functions");
 const { getUserData, setWait } = require("../utils/users-functions");
 const { errorAnswer, isUrl } = require("../utils/utils");
 const { createTempChangelogEntry, updateTempChangelogEntry, getTempChangelogById, getChangelogsConfig, showTempChangelog } = require("../utils/changelog-functions");
+const { messageProcessing } = require("../utils/gigachat-functions");
 
 module.exports = {
     name: 'msg',
@@ -20,6 +21,14 @@ module.exports = {
         }
 
         const { wait } = await getUserData(ctx.from.id);
+
+        if (!wait?.id) {
+            const suggestData = await messageProcessing(ctx);
+            if (suggestData) {
+                const targetDay = await getDayScheduleById(suggestData.targetDayId);
+                await sendGigaChatSuggestSended(ctx, targetDay, suggestData);
+            }
+        }
 
         if (wait?.id) {
             if (wait.id === 'add_note') {
@@ -47,6 +56,8 @@ module.exports = {
 
                 await sendActionLog(ctx, 'Добавлено примечание', [
                     `Текст: ${data.note}`,
+                    `День: ${data.date}`,
+                    `День: ${data.date}`,
                     `Айди дня: ${data.id}`,
                     `Айди недели: ${data.weekId}`,
                 ]);
@@ -65,8 +76,7 @@ module.exports = {
                 if (!data)
                     return void await setWait(ctx.from.id, {});
 
-                data.lessons[wait.lessonIndex].exam = ctx.msg.text.slice(0, 100);
-                await Days.update({ lessons: data.lessons }, { where: { id: data.id } });
+                const newTargetLesson = await addExamToLesson(data, wait.lessonIndex, ctx.msg.text);
 
                 await showManageDay(ctx, data.weekId, data.index, { editMessageId: wait.editMessageId });
 
@@ -78,9 +88,12 @@ module.exports = {
                     `Текст: ${ctx.msg.text.slice(0, 100)}`,
                     `Урок: ${lessonData.name}`,
                     `Индекс урока: ${wait.lessonIndex}`,
+                    `День: ${data.date}`,
                     `Айди дня: ${data.id}`,
                     `Айди недели: ${data.weekId}`,
                 ]);
+
+                await sendAddExamLog(ctx, newTargetLesson, data);
 
             } else if (wait.id === 'add_homework') {
 
@@ -96,22 +109,7 @@ module.exports = {
                 if (data.lessons[wait.lessonIndex].homework.length >= 3)
                     return void await errorAnswer(ctx, `Для данного урока достигнуто максимальное количество домашних заданий`, { deleteAfter: 5 });
 
-                let homeworkText = ctx.msg.text.slice(0, 300);
-                if (wait.teacherId) {
-                    const { teachers } = await getSubgroups();
-                    homeworkText = (wait.teacherId === 'all')
-                        ? `для всех: ${homeworkText}`
-                        : `группа ${teachers[wait.teacherId]}: ${homeworkText}`;
-                }
-
-                const targetLessonData = data.lessons[wait.lessonIndex];
-
-                for (const lesson of data.lessons) {
-                    if (lesson.name === targetLessonData.name && lesson.homework.length < 3) {
-                        lesson.homework.push(homeworkText);
-                    }
-                }
-                await Days.update({ lessons: data.lessons }, { where: { id: data.id } });
+                await addHomeworkToLesson(data, wait.lessonIndex, ctx.msg.text, { teacherId: wait.teacherId });
 
                 await showManageDay(ctx, data.weekId, data.index, { editMessageId: wait.editMessageId });
 
@@ -123,6 +121,7 @@ module.exports = {
                     `Текст: ${ctx.msg.text.slice(0, 110)}`,
                     `Урок: ${lessonData.name}`,
                     `Индекс урока: ${wait.lessonIndex}`,
+                    `День: ${data.date}`,
                     `Айди дня: ${data.id}`,
                     `Айди недели: ${data.weekId}`,
                 ]);
@@ -215,6 +214,7 @@ module.exports = {
                     `Значение: ${JSON.stringify({ ...value, attachmentName: wait.attachmentName, mediaGroupId: attachmentData.mediaGroupId }, null, 2)}`,
                     `Урок: ${lessonData.name}`,
                     `Индекс урока: ${wait.lessonIndex}`,
+                    `День: ${data.date}`,
                     `Айди дня: ${data.id}`,
                     `Айди недели: ${data.weekId}`,
                 ]);

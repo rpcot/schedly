@@ -28,6 +28,7 @@ module.exports = {
 
             await sendActionLog(ctx, 'Удаление урока', [
                 `Урок: ${lessonName}`,
+                `День: ${data.date}`,
                 `Айди дня: ${data.id}`,
                 `Айди недели: ${data.weekId}`,
             ]);

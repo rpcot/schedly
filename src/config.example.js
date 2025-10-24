@@ -39,6 +39,8 @@ module.exports = {
     defaultPrefixesPath: join(__dirname, 'data', 'default_prefixes.json'),
     defaultLessonsPath: join(__dirname, 'data', 'default_lessons.json'),
     changelogConfigPath: join(__dirname, 'data', 'changelog_config.json'),
+    gigaChatConfigPath: join(__dirname, 'data', 'giga_chat_config.json'),
+    certsPath: join(__dirname, 'certs'),
 
     logsPath: join(resolve(__dirname, '..'), 'logs'),
     consoleLogging: true, // logging to console

@@ -59,6 +59,7 @@ module.exports = {
                 `Значение: ${JSON.stringify(attachmentData.value, null, 2)}`,
                 `Урок: ${lessonData.name}`,
                 `Индекс урока: ${lessonIndex}`,
+                `День: ${data.date}`,
                 `Айди дня: ${data.id}`,
                 `Айди недели: ${data.weekId}`,
             ]);

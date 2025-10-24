@@ -167,6 +167,23 @@ function scrollToHashAfterImages() {
 
     Promise.all(promises).then(() => {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        el.classList.add('update-card-pulse');
+                        console.log(true);
+
+                        setTimeout(() => el.classList.remove('update-card-pulse'), 350);
+                    }, 250);
+
+                    observer.unobserve(el);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        observer.observe(el);
     });
 }
 

@@ -98,6 +98,7 @@ module.exports = {
                 `Индекс домашнего задания: ${homeworkIndex}`,
                 `Индекс таргетного урока: ${targetLessonId}`,
                 `Индекс дня: ${dayOfWeek}`,
+                `День: ${data.date}`,
                 `Айди дня: ${dataId}`,
                 `Айди недели: ${weekId}`,
                 `Перенесенное домашнее задание:\n${homeworkToMove.join('\n')}`,

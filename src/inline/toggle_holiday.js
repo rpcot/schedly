@@ -22,6 +22,7 @@ module.exports = {
 
         await sendActionLog(ctx, 'Изменен статус учебного дня', [
             `Новое значение: ${(data.holiday) ? 'Неучебный' : 'Учебный'}`,
+            `День: ${data.date}`,
             `Айди дня: ${data.id}`,
             `Айди недели: ${data.weekId}`,
         ]);

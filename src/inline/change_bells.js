@@ -23,6 +23,7 @@ module.exports = {
 
             await sendActionLog(ctx, 'Изменен тип звонков', [
                 `Новый тип: ${newType}`,
+                `День: ${data.date}`,
                 `Айди дня: ${data.id}`,
                 `Айди недели: ${data.weekId}`,
             ]);

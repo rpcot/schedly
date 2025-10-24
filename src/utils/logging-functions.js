@@ -1,4 +1,5 @@
 const { loggingChannelId, generalChannelId, dayNames } = require('../config');
+const { getGigaChatConfig } = require('./gigachat-functions');
 
 async function sendActionLog(ctx, text, params = []) {
     const bot = require('../index');
@@ -15,9 +16,8 @@ async function sendActionLog(ctx, text, params = []) {
             parse_mode: 'HTML',
         });
     } catch (error) {
-        bot.logger.error(`Возникла ошибка при логировании:\n${error.stack}\n`, { ctx, text, params });
+        bot.logger.error(`Возникла ошибка при логировании действия:\n${error.stack}\n`, { ctx, text, params });
     }
-
 }
 
 async function sendChangeCabinetTodayLog(ctx, lessonData, oldCabinet) {
@@ -31,6 +31,22 @@ async function sendChangeCabinetTodayLog(ctx, lessonData, oldCabinet) {
         });
     } catch (error) {
         bot.logger.error(`Возникла ошибка при отправке оповещения о изменении кабинета:\n${error.stack}`, { ctx, lesson, oldCabinet })
+    }
+}
+
+async function sendAddExamLog(ctx, lessonData, targetDay) {
+    const bot = require('../index');
+
+    try {
+        const text = `🔖 Добавлена <b>проверочная работа</b> по предмету <b>${lessonData.name}</b> на <b>${dayNames[targetDay.index]}</b> (${targetDay.date}):
+        ${lessonData.exam}`
+            .replace(/  +/g, '');
+
+        await ctx.api.sendMessage(generalChannelId, text, {
+            parse_mode: 'HTML',
+        });
+    } catch (error) {
+        bot.logger.error(`Возникла ошибка при отправке оповещения о добавлении проверочной:\n${error.stack}`, { ctx, lesson, oldCabinet })
     }
 }
 
@@ -49,8 +65,77 @@ async function sendChangeDayNoteLog(ctx, day) {
     }
 }
 
+async function sendGigaChatActionLog(ctx, text, suggestId, params = []) {
+    const bot = require('../index');
+
+    try {
+        const messageText = `<b>[Предложение <code>${suggestId}</code>] ${new Date().toLocaleString('ru-RU')}</b>
+        ${text}
+        ${params.join('\n')}
+        `.replace(/  +/g, '');
+
+        await ctx.api.sendMessage(loggingChannelId, messageText, {
+            parse_mode: 'HTML',
+        });
+    } catch (error) {
+        bot.logger.error(`Возникла ошибка при логировании действия GigaChat:\n${error.stack}\n`, { ctx, text, params });
+    }
+}
+
+async function sendGigaChatSuggestDecline(ctx, targetDay, suggestData) {
+    const bot = require('../index');
+
+    const { types } = getGigaChatConfig();
+
+    try {
+        const text = `<b>Предложение от GigaChat [<code>${suggestData.id}</code>] отклонено</b>:
+        <b>Предложение</b>
+        • Тип: <b>${types[suggestData.type].name}</b>
+        • Значение: <b>${suggestData.value}</b>
+        <b>День</b>
+        • Название: <b>${dayNames[targetDay.index]}</b>
+        • Дата: <b>${targetDay.date}</b>
+        • Айди: <b>${targetDay.id}</b>
+        `.replace(/  +/g, '');
+
+        await ctx.api.sendMessage(loggingChannelId, text, {
+            parse_mode: 'HTML',
+        });
+    } catch (error) {
+        bot.logger.error(`Возникла ошибка при отправке лога отклонения предложения GigaChat:\n${error.stack}`, { suggestData });
+    }
+}
+
+async function sendGigaChatSuggestSended(ctx, targetDay, suggestData) {
+    const bot = require('../index');
+
+    const { types } = getGigaChatConfig();
+
+    try {
+        const text = `<b>Новое предложение от GigaChat [<code>${suggestData.id}</code>]</b>:
+        <b>Предложение</b>
+        • Тип: <b>${types[suggestData.type].name}</b>
+        • Значение: <b>${suggestData.value}</b>
+        <b>День</b>
+        • Название: <b>${dayNames[targetDay.index]}</b>
+        • Дата: <b>${targetDay.date}</b>
+        • Айди: <b>${targetDay.id}</b>
+        `.replace(/  +/g, '');
+
+        await ctx.api.sendMessage(loggingChannelId, text, {
+            parse_mode: 'HTML',
+        });
+    } catch (error) {
+        bot.logger.error(`Возникла ошибка при отправке лога отклонения предложения GigaChat:\n${error.stack}`, { suggestData });
+    }
+}
+
 module.exports = {
     sendActionLog,
     sendChangeCabinetTodayLog,
+    sendAddExamLog,
     sendChangeDayNoteLog,
+    sendGigaChatActionLog,
+    sendGigaChatSuggestDecline,
+    sendGigaChatSuggestSended,
 };

@@ -26,6 +26,7 @@ module.exports = {
                 `Новое значение: ${(lessonData.canceled) ? 'Отменён' : 'По умолчанию'}`,
                 `Урок: ${lessonData.name}`,
                 `Индекс урока: ${lessonIndex}`,
+                `День: ${data.date}`,
                 `Айди дня: ${data.id}`,
                 `Айди недели: ${data.weekId}`,
             ]);

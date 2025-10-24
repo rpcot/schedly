@@ -1,5 +1,9 @@
-const { token } = require('./config');
+const { token, certsPath } = require('./config');
 const RPClient = require('./utils/structures/client.class');
+const { resolve } = require('path');
+
+process.env.NODE_EXTRA_CA_CERTS = resolve(__dirname, certsPath)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 const bot = new RPClient(token);
 

@@ -3,6 +3,7 @@
 
 # config
 src/config.js
+.vscode/
 
 # dependencies
 node_modules/
@@ -17,3 +18,4 @@ logs/*
 
 # other
 UPDATE.txt
+changelog

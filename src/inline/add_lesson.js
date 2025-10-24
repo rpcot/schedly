@@ -46,6 +46,7 @@ module.exports = {
             await sendActionLog(ctx, 'Добавление урока', [
                 `Урок: ${newLessonId}`,
                 `Позиция: ${lessonPosition + 1}`,
+                `День: ${data.date}`,
                 `Айди дня: ${data.id}`,
                 `Айди недели: ${data.weekId}`,
             ]);

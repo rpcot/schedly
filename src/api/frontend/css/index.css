@@ -173,6 +173,11 @@ nav {
 #saturday-card,
 .update-card {
     scroll-margin-top: 70px;
+    transition: background-color 0.25s ease;
+}
+
+.update-card-pulse {
+    background-color: rgb(45, 45, 46) !important;
 }
 
 .badge+.badge {

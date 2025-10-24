@@ -29,6 +29,7 @@ module.exports = {
 
             await sendActionLog(ctx, 'Удалено примечание', [
                 `Текст: ${noteText}`,
+                `День: ${data.date}`,
                 `Айди дня: ${data.id}`,
                 `Айди недели: ${data.weekId}`,
             ]);

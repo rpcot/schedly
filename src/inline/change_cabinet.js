@@ -37,6 +37,7 @@ module.exports = {
                 `Новый кабинет: ${newCabinet}`,
                 `Урок: ${lessonData.name}`,
                 `Индекс урока: ${lessonIndex}`,
+                `День: ${data.date}`,
                 `Айди дня: ${data.id}`,
                 `Айди недели: ${data.weekId}`,
             ]);

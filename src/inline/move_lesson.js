@@ -28,6 +28,7 @@ module.exports = {
 
             await sendActionLog(ctx, 'Предмет перемещён', [
                 `${firstLessonData.name} -> ${secondLessonData.name}`,
+                `День: ${data.date}`,
                 `Айди дня: ${data.id}`,
                 `Айди недели: ${data.weekId}`,
             ]);

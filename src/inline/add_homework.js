@@ -1,5 +1,5 @@
 const { InlineKeyboard } = require("grammy");
-const { getDayScheduleById, getSubgroups } = require("../utils/schedule-functions");
+const { getDayScheduleById, getSubgroups, generateSelectTeacherIdInline } = require("../utils/schedule-functions");
 const { setWait } = require("../utils/users-functions");
 
 module.exports = {
@@ -24,20 +24,11 @@ module.exports = {
         const subgroups = getSubgroups();
 
         if (Object.keys(subgroups.lessons).includes(lessonData.name) && !teacherId) {
-            const inline = new InlineKeyboard();
-
-            const teachers = subgroups.lessons[lessonData.name];
-            for (const teacherId of teachers) {
-                const groupName = (teacherId === 'all')
-                    ? 'Для всех'
-                    : `Группа ${subgroups.teachers[teacherId]}`;
-                inline
-                    .text(groupName, `add_homework?:${userId}?:${dataId}?:${lessonIndex}?:${teacherId}`);
-            }
-
-            inline
-                .row()
-                .text('Отменить', `back_manage_day?:${userId}?:${dataId}`);
+            const inline = generateSelectTeacherIdInline(
+                lessonData.name,
+                `add_homework?:${userId}?:${dataId}?:${lessonIndex}?:[teacherId]`,
+                `back_manage_day?:${userId}?:${dataId}`,
+            );
             
             await ctx.editMessageText(`Выберите <b>группу</b>, для которой вы хотите добавить <b>домашнее задание</b> на урок ${lessonData.name}`, {
                 parse_mode: 'HTML',
