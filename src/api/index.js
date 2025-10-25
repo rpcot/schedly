@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
-const { token, apiPort, apiHost, defaultBellsPath, weekUrlTemplate, attachmentUrlTemplate, changelogConfigPath } = require('../config');
+const { token, apiPort, apiHost, defaultBellsPath, weekUrlTemplate, attachmentUrlTemplate, changelogConfigPath, holidaysConfigPath } = require('../config');
 const { Weeks, Attachments, Changelogs } = require('../models');
 const { readFileSync } = require('fs');
 const { Bot } = require('grammy');
@@ -14,6 +14,10 @@ function getDefaultBells() {
 
 function getChangelogsConfig() {
     return JSON.parse(readFileSync(changelogConfigPath, 'utf-8'));
+}
+
+function getHolidays() {
+    return JSON.parse(readFileSync(holidaysConfigPath, 'utf-8'));
 }
 
 async function getData(week) {
@@ -174,11 +178,11 @@ const upload = multer();
 
 app.use(express.json());
 
-app.use(cors({
-    origin: 'https://schedule.rpcot.ru',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}));
-// app.use(cors());
+// app.use(cors({
+//     origin: 'https://schedule.rpcot.ru',
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+// }));
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.status(200).json({ ok: true, status: 200, message: 'OK', version: '2.3.0' });
@@ -255,6 +259,21 @@ app.get('/attachment/:id', upload.none(), async (req, res) => {
 app.get('/changelogs', upload.none(), async (req, res) => {
     try {
         const data = await getAllChangelogs();
+
+        res.status(200).json({
+            ok: true,
+            status: 200,
+            data,
+        });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
+    }
+});
+
+app.get('/holidays', upload.none(), async (req, res) => {
+    try {
+        const data = getHolidays();
 
         res.status(200).json({
             ok: true,

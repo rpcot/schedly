@@ -41,6 +41,7 @@ module.exports = {
     changelogConfigPath: join(__dirname, 'data', 'changelog_config.json'),
     gigaChatConfigPath: join(__dirname, 'data', 'giga_chat_config.json'),
     certsPath: join(__dirname, 'certs'),
+    holidaysConfigPath: join(__dirname, 'data', 'holidays.json'),
 
     logsPath: join(resolve(__dirname, '..'), 'logs'),
     consoleLogging: true, // logging to console
