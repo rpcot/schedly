@@ -4,7 +4,7 @@ const { Days } = require("../models");
 const { createAttachmentData, getAttachmentByMediaGroupId, getAttachmentValueFromCtx, checkMsgMediaGroup } = require("../utils/attachments-functions");
 const { sendActionLog, sendChangeDayNoteLog, sendAddExamLog, sendGigaChatSuggestSended } = require("../utils/logging-functions");
 const { getDayScheduleById, showManageDay, getSubgroups, addHomeworkToLesson, addExamToLesson } = require("../utils/schedule-functions");
-const { getUserData, setWait } = require("../utils/users-functions");
+const { getUserData, setWait, checkAdminPerms } = require("../utils/users-functions");
 const { errorAnswer, isUrl } = require("../utils/utils");
 const { createTempChangelogEntry, updateTempChangelogEntry, getTempChangelogById, getChangelogsConfig, showTempChangelog } = require("../utils/changelog-functions");
 const { messageProcessing } = require("../utils/gigachat-functions");
@@ -23,6 +23,9 @@ module.exports = {
         const { wait } = await getUserData(ctx.from.id);
 
         if (!wait?.id) {
+            const isAdmin = await checkAdminPerms(ctx.from.id);
+            if (!isAdmin) return;
+            
             const suggestData = await messageProcessing(ctx);
             if (suggestData) {
                 const targetDay = await getDayScheduleById(suggestData.targetDayId);
