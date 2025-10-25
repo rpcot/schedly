@@ -30,6 +30,11 @@
         "cabinet": 22
     },
     {
+        "id": "preparationForFinalEssay",
+        "name": "Подготовка к итоговому сочинению",
+        "cabinet": 22
+    },
+    {
         "id": "english",
         "name": "Английский язык",
         "cabinet": "3/возле актового зала"
