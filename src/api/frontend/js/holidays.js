@@ -1,17 +1,7 @@
 const holidayIds = ['autumn', 'winter', 'spring', 'summer'];
 const counterIds = ['newYear', 'summer'];
 
-function calculateDateDifference(date) {
-    const now = new Date();
-    const targetDate = new Date(date);
-    const difference = Math.floor((targetDate - now) / 1000);
-
-    if (difference < 0) {
-        return null;
-    }
-
-    return difference;
-}
+const errorMessage = '❌ Ошибка при обработке данных';
 
 function isDateBetweenDates(targetDate, date1, date2) {
     return targetDate >= date1 && targetDate <= date2;
@@ -22,7 +12,7 @@ function plural(number, titles) {
     return `${titles[number % 100 > 4 && number % 100 < 20 ? 2 : cases[number % 10 < 5 ? number % 10 : 5]]}`;
 }
 
-function getPreciseDiff(startDate, endDate) {
+function getPreciseDatesDiff(startDate, endDate) {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const result = { years: 0, months: 0, weeks: 0, days: 0, hours: 0, minutes: 0, seconds: 0 };
@@ -61,7 +51,7 @@ function getPreciseDiff(startDate, endDate) {
 function getTimeStringView(end, format, length = 'short') {
     const now = new Date();
 
-    const diff = getPreciseDiff(now, end);
+    const diff = getPreciseDatesDiff(now, end);
 
     const { years, months, weeks, days, hours, minutes, seconds } = diff;
 
@@ -124,10 +114,8 @@ function calculateCounters(data) {
     for (const [id, { start, plug }] of Object.entries(data.counters)) {
         const startDate = new Date(start);
 
-        const stillUntilEvent = calculateDateDifference(startDate);
-
         const counterElement = document.getElementById(`${id}-counter`);
-        if (stillUntilEvent) {
+        if (new Date() < startDate) {
             const timeStringView = getTimeStringView(startDate, 'yymowwddhhmmss', 'long');
             counterElement.innerHTML = timeStringView;
         } else {
@@ -136,35 +124,36 @@ function calculateCounters(data) {
     }
 }
 
+function updateUI(data) {
+    calculateHolidays(data);
+    calculateCounters(data);
+}
+
 async function fetchData() {
-    const response = await fetch('http://127.0.0.1:4444/holidays', {
-        method: 'GET',
-    });
-    // const response = await fetch('https://api.schedule.rpcot.ru/holidays', {
+    // const response = await fetch('http://127.0.0.1:4444/holidays', {
     //     method: 'GET',
     // });
+    const response = await fetch('https://api.schedule.rpcot.ru/holidays', {
+        method: 'GET',
+    });
 
     if (!response.ok)
         throw new Error('Network response was not ok');
 
     const responseData = await response.json();
+    if (!responseData.ok)
+        throw new Error('API response was not ok');
+
     const data = responseData.data;
 
     updateUI(data);
     setInterval(() => updateUI(data), 1000);
 }
 
-function updateUI(data) {
-    calculateHolidays(data);
-    calculateCounters(data);
-}
-
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         await fetchData();
     } catch (error) {
-        const errorMessage = '❌ Ошибка при обработке данных';
-
         holidayIds.forEach(id => {
             const scheduleElement = document.getElementById(`${id}-holiday-schedule`);
             scheduleElement.innerHTML = errorMessage;
