@@ -134,7 +134,7 @@ async function fetchDays() {
                 date.innerText = day.date;
 
                 if (day.today) {
-                    card.classList.add('current-day');
+                    card.classList.add('glowing-card');
                     currentDayText.innerText = '(сегодня)';
                     todayDayId = dayId;
                 }
