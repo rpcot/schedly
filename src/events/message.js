@@ -96,7 +96,7 @@ module.exports = {
                     `Айди недели: ${data.weekId}`,
                 ]);
 
-                await sendAddExamLog(ctx, newTargetLesson, data);
+                await sendAddExamLog(ctx, newTargetLesson, data, wait.lessonIndex + 1);
 
             } else if (wait.id === 'add_homework') {
 

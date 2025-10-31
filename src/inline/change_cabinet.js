@@ -29,7 +29,7 @@ module.exports = {
             const lessonData = data.lessons[parseInt(lessonIndex)];
 
             if (data.date === new Date().toLocaleDateString('ru-RU')) {
-                await sendChangeCabinetTodayLog(ctx, lessonData, oldCabinet);
+                await sendChangeCabinetTodayLog(ctx, lessonData, oldCabinet, parseInt(lessonIndex) + 1);
             }
 
             await sendActionLog(ctx, 'Изменён кабинет', [

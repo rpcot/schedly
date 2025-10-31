@@ -1,5 +1,5 @@
 const { Days } = require("../models");
-const { sendActionLog } = require("../utils/logging-functions");
+const { sendActionLog, sendDisableLessonTodayLog } = require("../utils/logging-functions");
 const { showToggleLessonChoose, getDayScheduleById } = require("../utils/schedule-functions");
 
 module.exports = {
@@ -17,11 +17,13 @@ module.exports = {
         }
 
         if (lessonIndex) {
-            data.lessons[parseInt(lessonIndex)].canceled = !data.lessons[parseInt(lessonIndex)].canceled;
+            const targetLessonData = data.lessons[parseInt(lessonIndex)];
+            
+            targetLessonData.canceled = !targetLessonData.canceled;
             await Days.update({ lessons: data.lessons }, { where: { id: data.id } });
-
-            const lessonData = data.lessons[parseInt(lessonIndex)];
-
+            
+            const lessonData = targetLessonData;
+            
             await sendActionLog(ctx, 'Изменён статус урока', [
                 `Новое значение: ${(lessonData.canceled) ? 'Отменён' : 'По умолчанию'}`,
                 `Урок: ${lessonData.name}`,
@@ -30,6 +32,13 @@ module.exports = {
                 `Айди дня: ${data.id}`,
                 `Айди недели: ${data.weekId}`,
             ]);
+
+            if (
+                targetLessonData.canceled &&
+                data.date === new Date().toLocaleDateString('ru-RU')
+            ) {
+                await sendDisableLessonTodayLog(ctx, targetLessonData, parseInt(lessonIndex) + 1);
+            }
         }
 
         await showToggleLessonChoose(ctx, data);

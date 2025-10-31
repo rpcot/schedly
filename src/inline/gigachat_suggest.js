@@ -88,7 +88,7 @@ module.exports = {
                             `Айди недели: ${targetDay.weekId}`,
                         ]);
 
-                        await sendAddExamLog(ctx, targetLesson, targetDay);
+                        await sendAddExamLog(ctx, targetLesson, targetDay, suggestData.targetLessonIndex + 1);
 
                         break;
                     }

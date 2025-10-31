@@ -20,25 +20,39 @@ async function sendActionLog(ctx, text, params = []) {
     }
 }
 
-async function sendChangeCabinetTodayLog(ctx, lessonData, oldCabinet) {
+async function sendChangeCabinetTodayLog(ctx, lessonData, oldCabinet, lessonNumber) {
     const bot = require('../index');
 
     try {
-        const text = `‼️ Урок <b>${lessonData.name}</b> перенесен в кабинет <b>${lessonData.cabinet}</b> (ранее: ${oldCabinet})`
+        const text = `‼️ Урок <b>${lessonData.name}</b> (${lessonNumber}) перенесен в кабинет <b>${lessonData.cabinet}</b> (ранее: ${oldCabinet})`
 
         await ctx.api.sendMessage(generalChannelId, text, {
             parse_mode: 'HTML',
         });
     } catch (error) {
-        bot.logger.error(`Возникла ошибка при отправке оповещения о изменении кабинета:\n${error.stack}`, { ctx, lesson, oldCabinet })
+        bot.logger.error(`Возникла ошибка при отправке оповещения об изменении кабинета:\n${error.stack}`, { ctx, lesson, oldCabinet })
     }
 }
 
-async function sendAddExamLog(ctx, lessonData, targetDay) {
+async function sendDisableLessonTodayLog(ctx, lessonData, lessonNumber) {
     const bot = require('../index');
 
     try {
-        const text = `🔖 Добавлена <b>проверочная работа</b> по предмету <b>${lessonData.name}</b> на <b>${dayNames[targetDay.index]}</b> (${targetDay.date}):
+        const text = `‼️ Урок <b>${lessonData.name}</b> (${lessonNumber}) отменен`;
+
+        await ctx.api.sendMessage(generalChannelId, text, {
+            parse_mode: 'HTML',
+        });
+    } catch (error) {
+        bot.logger.error(`Возникла ошибка при отправке оповещения об отмене урока:\n${error.stack}`, { ctx, lesson, oldCabinet })
+    }
+}
+
+async function sendAddExamLog(ctx, lessonData, targetDay, lessonNumber) {
+    const bot = require('../index');
+
+    try {
+        const text = `🔖 Добавлена <b>проверочная работа</b> по предмету <b>${lessonData.name}</b> (${lessonNumber}) на <b>${dayNames[targetDay.index]}</b> (${targetDay.date}):
         ${lessonData.exam}`
             .replace(/  +/g, '');
 
@@ -133,6 +147,7 @@ async function sendGigaChatSuggestSended(ctx, targetDay, suggestData) {
 module.exports = {
     sendActionLog,
     sendChangeCabinetTodayLog,
+    sendDisableLessonTodayLog,
     sendAddExamLog,
     sendChangeDayNoteLog,
     sendGigaChatActionLog,
