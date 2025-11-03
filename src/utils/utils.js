@@ -217,6 +217,12 @@ module.exports = {
 
     },
 
+    generateAuthorStringView(user) {
+        return user.username
+            ? `@${user.username}`
+            : `${user.first_name} ${user.last_name ?? ''}`.trim();
+    },
+
     async errorAnswer(ctx, text, { deleteAfter, keyboard = {} } = {}) {
 
         const msg = await ctx.reply(`⚠️ ${text}`, {

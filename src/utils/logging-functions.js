@@ -1,13 +1,14 @@
 const { loggingChannelId, generalChannelId, dayNames } = require('../config');
 const { getGigaChatConfig } = require('./gigachat-functions');
+const { generateAuthorStringView } = require('./utils');
 
 async function sendActionLog(ctx, text, params = []) {
     const bot = require('../index');
 
     try {
-        const author = ctx.from.username || `${ctx.from.first_name} ${ctx.from.last_name}`;
+        const authorStringView = `${generateAuthorStringView(ctx.from)} [<code>${ctx.from.id}</code>]`;
 
-        const messageText = `<b>${author} <code>${ctx.from.id}</code> ${new Date().toLocaleString('ru-RU')}</b>
+        const messageText = `<b>${authorStringView} ${new Date().toLocaleString('ru-RU')}</b>
         ${text}
         ${params.join('\n')}
         `.replace(/  +/g, '');
@@ -79,11 +80,13 @@ async function sendChangeDayNoteLog(ctx, day) {
     }
 }
 
-async function sendGigaChatActionLog(ctx, text, suggestId, params = []) {
+async function sendGigaChatActionLog(ctx, text, suggestId, initiator, params = []) {
     const bot = require('../index');
 
+    const authorStringView = `${generateAuthorStringView(initiator)} [<code>${initiator.id}</code>]`;
+
     try {
-        const messageText = `<b>[Предложение <code>${suggestId}</code>] ${new Date().toLocaleString('ru-RU')}</b>
+        const messageText = `<b>[Предложение <code>${suggestId}</code> для ${authorStringView}] ${new Date().toLocaleString('ru-RU')}</b>
         ${text}
         ${params.join('\n')}
         `.replace(/  +/g, '');
@@ -96,13 +99,15 @@ async function sendGigaChatActionLog(ctx, text, suggestId, params = []) {
     }
 }
 
-async function sendGigaChatSuggestDecline(ctx, targetDay, suggestData) {
+async function sendGigaChatSuggestDecline(ctx, targetDay, suggestData, initiator) {
     const bot = require('../index');
 
     const { types } = getGigaChatConfig();
 
+    const authorStringView = `${generateAuthorStringView(initiator)} [<code>${initiator.id}</code>]`;
+
     try {
-        const text = `<b>Предложение от GigaChat [<code>${suggestData.id}</code>] отклонено</b>:
+        const text = `<b>Предложение от GigaChat [<code>${suggestData.id}</code>] для ${authorStringView} отклонено</b>:
         <b>Предложение</b>
         • Тип: <b>${types[suggestData.type].name}</b>
         • Значение: <b>${suggestData.value}</b>
@@ -120,13 +125,15 @@ async function sendGigaChatSuggestDecline(ctx, targetDay, suggestData) {
     }
 }
 
-async function sendGigaChatSuggestSended(ctx, targetDay, suggestData) {
+async function sendGigaChatSuggestSended(ctx, targetDay, suggestData, initiator) {
     const bot = require('../index');
 
     const { types } = getGigaChatConfig();
 
+    const authorStringView = `${generateAuthorStringView(initiator)} [<code>${initiator.id}</code>]`;
+
     try {
-        const text = `<b>Новое предложение от GigaChat [<code>${suggestData.id}</code>]</b>:
+        const text = `<b>Новое предложение от GigaChat [<code>${suggestData.id}</code>] для ${authorStringView}</b>:
         <b>Предложение</b>
         • Тип: <b>${types[suggestData.type].name}</b>
         • Значение: <b>${suggestData.value}</b>

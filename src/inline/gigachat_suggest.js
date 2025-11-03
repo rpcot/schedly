@@ -1,4 +1,5 @@
-const { getSuggestById, generateGigaChatSuggestStringView } = require("../utils/gigachat-functions");
+const { getChatMember } = require("../utils/chat-functions");
+const { getSuggestById, generateGigaChatSuggestStringView, setSuggestStatusById } = require("../utils/gigachat-functions");
 const { sendGigaChatActionLog, sendAddExamLog, sendGigaChatSuggestDecline } = require("../utils/logging-functions");
 const { getDayScheduleById, getSubgroups, generateSelectTeacherIdInline, addHomeworkToLesson, addExamToLesson } = require("../utils/schedule-functions");
 
@@ -15,8 +16,10 @@ module.exports = {
 
         switch (action) {
             case 'decline': {
-                await ctx.deleteMessage();
-                await sendGigaChatSuggestDecline(ctx, targetDay, suggestData);
+                await ctx.deleteMessage()
+                    .catch(() => { });
+                await sendGigaChatSuggestDecline(ctx, targetDay, suggestData, ctx.from);
+                await setSuggestStatusById(suggestData.id, 'declined');
                 break;
             }
             case 'accept': {
@@ -58,7 +61,7 @@ module.exports = {
                             });
                         }
 
-                        await sendGigaChatActionLog(ctx, 'Добавлено домашнее задание', suggestData.id, [
+                        await sendGigaChatActionLog(ctx, 'Добавлено домашнее задание', suggestData.id, ctx.from, [
                             `Текст: ${suggestData.value.slice(0, 110)}`,
                             `Урок: ${targetLesson.name}`,
                             `Индекс урока: ${suggestData.targetLessonIndex}`,
@@ -67,19 +70,21 @@ module.exports = {
                             `Айди недели: ${targetDay.weekId}`,
                         ]);
 
+                        await setSuggestStatusById(suggestData.id, 'accepted');
+
                         break;
                     }
                     case 'exam': {
                         await addExamToLesson(targetDay, suggestData.targetLessonIndex, suggestData.value);
 
-                        text += '\n\n<b>Экзамен добавлен</b>';
+                        text += '\n\n<b>Проверочная работа добавлена</b>';
 
                         await ctx.editMessageText(text, {
                             parse_mode: 'HTML',
                             reply_markup: null,
                         });
 
-                        await sendGigaChatActionLog(ctx, 'Добавлена проверочная работа', suggestData.id, [
+                        await sendGigaChatActionLog(ctx, 'Добавлена проверочная работа', suggestData.id, ctx.from, [
                             `Текст: ${suggestData.value.slice(0, 100)}`,
                             `Урок: ${targetLesson.name}`,
                             `Индекс урока: ${suggestData.targetLessonIndex}`,
@@ -89,6 +94,8 @@ module.exports = {
                         ]);
 
                         await sendAddExamLog(ctx, targetLesson, targetDay, suggestData.targetLessonIndex + 1);
+
+                        await setSuggestStatusById(suggestData.id, 'accepted');
 
                         break;
                     }

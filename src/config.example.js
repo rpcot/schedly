@@ -10,6 +10,7 @@ const {
     DB_NAME,
     DB_USER,
     DB_PASSWORD,
+    GIGA_CHAT_KEY,
 } = process.env;
 
 module.exports = {
@@ -19,6 +20,12 @@ module.exports = {
     apiPort: API_PORT,
     weekUrlTemplate: '', // URL template for generating schedule links by week number, e.g. https://schedule.rpcot.ru/schedule?week=
     attachmentUrlTemplate: '', // URL template for generating attachment links by attachment id, e.g. https://api.schedule.rpcot.ru/attachment/
+
+    giga: {
+        key: GIGA_CHAT_KEY,
+        scope: 'GIGACHAT_API_PERS',
+        model: 'GigaChat-2',
+    },
 
     databaseSettings: {
         dialect: 'mysql',

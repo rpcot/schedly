@@ -181,8 +181,6 @@ function findNearestLesson(lessonName) {
             lessonIndex: occurrences[0].lessonIndex,
         };
 
-    console.log(nextOccurrence);
-
     return nextOccurrence;
 }
 

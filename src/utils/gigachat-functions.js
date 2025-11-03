@@ -82,41 +82,23 @@ function generateGigaChatSuggestStringView(targetDay, targetLesson, type, value)
 
 async function getGigaChatResponse(input) {
     const { prompt } = getGigaChatConfig();
-    const response = {
-        choices: [
+    const response = await gigaChat.chat({
+        messages: [
             {
-                message: {
-                    content: '{"status":"success","code":200,"type":"homework","lesson_name":"Алгебра","value":"номер 405"}',
-                },
+                role: 'system',
+                content: prompt,
             },
-            // {
-            //     message: {
-            //         content: '{"status":"success","code":200,"type":"exam","lesson_name":"Английский язык","value":"по 1 параграфу"}',
-            //     },
-            // },
+            {
+                role: 'user',
+                content: input,
+            },
         ],
-    };
-    // const response = await gigaChat.chat({
-    //     messages: [
-    //         {
-    //             role: 'system',
-    //             content: prompt,
-    //         },
-    //         {
-    //             role: 'user',
-    //             content: input,
-    //         },
-    //     ],
-    // });
+    });
 
     const answer = response.choices[0]?.message?.content;
     try {
-        console.log(answer);
-
         return JSON.parse(answer);
     } catch (_) {
-        console.log(_);
-
         return null;
     }
 }
@@ -134,14 +116,14 @@ async function messageProcessing(ctx) {
     if (isError) {
         return void bot.logger.error(`Ошибка при обработке ответа от Giga:`, { message, input, response });
     }
-
+    
     const result = findNearestLesson(response.lesson_name);
     if (!result) return;
     const { lessonIndex, dayIndex, currentWeek } = result;
     const day = await getNearestDayByIndex(dayIndex, currentWeek);
     const targetLesson = day.lessons[lessonIndex];
 
-    const suggestData = await createSuggest(day.id, lessonIndex, response.type, response.value);
+    const suggestData = await createSuggest(ctx.from.id, day.id, lessonIndex, response.type, response.value);
 
     const text = generateGigaChatSuggestStringView(day, targetLesson, response.type, response.value);
 
@@ -158,10 +140,11 @@ async function messageProcessing(ctx) {
     return suggestData;
 }
 
-async function createSuggest(targetDayId, targetLessonIndex, type, value) {
+async function createSuggest(initiatorId, targetDayId, targetLessonIndex, type, value) {
     const bot = require('../index');
 
     const suggestData = await GigaChatSuggests.create({
+        initiatorId,
         targetDayId,
         targetLessonIndex,
         type,
@@ -183,10 +166,25 @@ async function getSuggestById(id) {
     return suggestData;
 }
 
+async function setSuggestStatusById(suggestId, status) {
+    const bot = require('../index');
+
+    const suggestData = await getSuggestById(suggestId);
+    if (!suggestData) return;
+
+    suggestData.status = status;
+    await suggestData.save();
+
+    bot.logger.info(`Установка статуса предложения от GigaChat:`, { suggestId, status });
+
+    return suggestData;
+}
+
 module.exports = {
     getGigaChatConfig,
     generateGigaChatSuggestStringView,
     messageProcessing,
     createSuggest,
     getSuggestById,
+    setSuggestStatusById,
 };

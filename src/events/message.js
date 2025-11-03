@@ -1,9 +1,8 @@
 const { InlineKeyboard } = require("grammy");
 const { developerId } = require("../config");
-const { Days } = require("../models");
-const { createAttachmentData, getAttachmentByMediaGroupId, getAttachmentValueFromCtx, checkMsgMediaGroup } = require("../utils/attachments-functions");
+const { createAttachmentData, getAttachmentValueFromCtx, checkMsgMediaGroup } = require("../utils/attachments-functions");
 const { sendActionLog, sendChangeDayNoteLog, sendAddExamLog, sendGigaChatSuggestSended } = require("../utils/logging-functions");
-const { getDayScheduleById, showManageDay, getSubgroups, addHomeworkToLesson, addExamToLesson } = require("../utils/schedule-functions");
+const { getDayScheduleById, showManageDay, addHomeworkToLesson, addExamToLesson } = require("../utils/schedule-functions");
 const { getUserData, setWait, checkAdminPerms } = require("../utils/users-functions");
 const { errorAnswer, isUrl } = require("../utils/utils");
 const { createTempChangelogEntry, updateTempChangelogEntry, getTempChangelogById, getChangelogsConfig, showTempChangelog } = require("../utils/changelog-functions");
@@ -29,7 +28,7 @@ module.exports = {
             const suggestData = await messageProcessing(ctx);
             if (suggestData) {
                 const targetDay = await getDayScheduleById(suggestData.targetDayId);
-                await sendGigaChatSuggestSended(ctx, targetDay, suggestData);
+                await sendGigaChatSuggestSended(ctx, targetDay, suggestData, ctx.from);
             }
         }
 
