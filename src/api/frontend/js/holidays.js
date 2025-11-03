@@ -83,9 +83,6 @@ function calculateHolidays(data) {
         const startDate = new Date(start);
         const endDate = new Date(end);
 
-        startDate.setHours(0);
-        endDate.setHours(0);
-
         const scheduleElement = document.getElementById(`${id}-holiday-schedule`);
         const counterElement = document.getElementById(`${id}-holiday-counter`);
 
