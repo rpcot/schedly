@@ -12,9 +12,9 @@ module.exports = {
             return void await ctx.answerCallbackQuery('Вы не можете взаимодействовать с чужими кнопками');
         } else if (!data) {
             return void await ctx.answerCallbackQuery('Информация о выбранном дне не найдена. Пропиши команду ещё раз');
-        } else if (data.lessons.length >= 7) {
+        } else if (data.lessons.length >= 8) {
             return void await ctx.answerCallbackQuery('Достигнуто максимальное количество уроков в расписании');
-        } else if (!newLessonId) {
+        } else {
             await ctx.answerCallbackQuery();
         }
 
@@ -23,9 +23,6 @@ module.exports = {
             const lesson = lessons.find((lessonData) => lessonData.id === newLessonId);
             
             const sameLesson = data.lessons.find((lessonData) => lessonData.name === lesson.name);
-
-            console.log(sameLesson);
-            
 
             const lessonData = {
                 name: lesson.name,
@@ -40,8 +37,6 @@ module.exports = {
             await Days.update({ lessons: data.lessons }, { where: { id: data.id } });
 
             await showManageDay(ctx, data.weekId, data.index);
-
-            await ctx.answerCallbackQuery('Урок добавлен, не забудь указать дня него кабинет');
 
             await sendActionLog(ctx, 'Добавление урока', [
                 `Урок: ${newLessonId}`,
@@ -86,6 +81,7 @@ module.exports = {
                 .text('6', `add_lesson?:${ctx.from.id}?:${dataId}?:5`)
                 .row()
                 .text('7', `add_lesson?:${ctx.from.id}?:${dataId}?:6`)
+                .text('8', `add_lesson?:${ctx.from.id}?:${dataId}?:7`)
                 .row()
                 .text('Вернуться', `back_manage_day?:${ctx.from.id}?:${data.id}`);
 
