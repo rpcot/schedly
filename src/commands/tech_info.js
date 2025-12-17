@@ -12,12 +12,12 @@ module.exports = {
 
         <b>🌐 Сайт</b>
         • Сайт: <a href="https://schedly.rpcot.ru">schedly.rpcot.ru</a>
-        • Версия сайта: <code>v3.0.0</code>
+        • Версия сайта: <code>v3.0.1</code>
         • Последнее обновление: <code>17.12.2025</code>
         
         <b>🧩 API</b>
         • API: <a href="https://api.schedule.rpcot.ru">api.schedule.rpcot.ru</a>
-        • Версия API: <code>v2.5.0</code>
+        • Версия API: <code>v2.5.1</code>
         • Последнее обновление: <code>17.12.2025</code>
 
         <b>🛠 Стек технологий</b>
