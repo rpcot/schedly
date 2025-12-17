@@ -11,22 +11,24 @@ module.exports = {
         • Последнее обновление: <code>04.11.2025</code>
 
         <b>🌐 Сайт</b>
-        • Сайт: <a href="https://schedule.rpcot.ru/schedule">schedule.rpcot.ru</a>
-        • Версия сайта: <code>v2.6.0</code>
-        • Последнее обновление: <code>03.11.2025</code>
+        • Сайт: <a href="https://schedly.rpcot.ru">schedly.rpcot.ru</a>
+        • Версия сайта: <code>v3.0.0</code>
+        • Последнее обновление: <code>17.12.2025</code>
         
         <b>🧩 API</b>
         • API: <a href="https://api.schedule.rpcot.ru">api.schedule.rpcot.ru</a>
-        • Версия API: <code>v2.4.0</code>
-        • Последнее обновление: <code>03.11.2025</code>
+        • Версия API: <code>v2.5.0</code>
+        • Последнее обновление: <code>17.12.2025</code>
 
         <b>🛠 Стек технологий</b>
-        • Язык программирования: <code>JavaScript</code> (+ CSS, HTML)
+        • Язык программирования: <code>JavaScript</code>
         • Версия Node.js: <code>${process.version}</code>
         • База данных: <code>MySQL</code>
+        • Фронтэнд: <code>React 19 + Chakra UI v2</code>
 
         <b>📂 GitHub</b>
         • https://github.com/rpcot/schedly
+        • https://github.com/rpcot/schedly-frontend
         `.replace(/  +/g, '');
 
         await ctx.reply(text, {

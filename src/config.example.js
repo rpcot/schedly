@@ -18,7 +18,7 @@ module.exports = {
 
     apiHost: API_HOST,
     apiPort: API_PORT,
-    weekUrlTemplate: '', // URL template for generating schedule links by week number, e.g. https://schedule.rpcot.ru/schedule?week=
+    weekUrlTemplate: '', // URL template for generating schedule links by week number, e.g. https://schedly.rpcot.ru?week=
     attachmentUrlTemplate: '', // URL template for generating attachment links by attachment id, e.g. https://api.schedule.rpcot.ru/attachment/
 
     giga: {

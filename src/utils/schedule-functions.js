@@ -650,7 +650,7 @@ async function showToggleLessonChoose(ctx, data) {
 
 async function sendBotSiteURL(ctx) {
 
-    const siteURL = `https://schedule.rpcot.ru/schedule`;
+    const siteURL = `https://schedly.rpcot.ru`;
 
     const inline = new InlineKeyboard()
         .url('Перейти на сайт', siteURL);
