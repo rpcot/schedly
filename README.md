@@ -2,67 +2,70 @@
   <a href="https://schedule.rpcot.ru/info"><img src="https://api.rpcot.ru/images/rasp-logo" alt="лого" /></a>
 </p>
 
-<h1 align="center">SCHEDLY</h1>
+<h1 align="center">SCHEDLY — Backend</h1>
 <div align="center">
-Telegram bot and site to conveniently view and manage school schedules and homework.
+Telegram-бот и сайт для удобного просмотра и управления школьным расписанием и домашними заданиями.
 </div>
 
-## About the project
+## О проекте
 
-- This bot helps you quickly get the latest schedule and homework updates.
-- The bot saves all previous data, shows the current week and the next two weeks.
-- The schedule is filled in by students, so you can specify all the details: homework, tests, class cancellations, extracurricular activities, and more.
+- Этот бот помогает быстро получать актуальное расписание и обновления по домашним заданиям.
+- Бот сохраняет все предыдущие, показывает текущую и следующие две недели.
+- Расписание заполняется учениками, поэтому можно указывать все детали: домашние задания, контрольные, отмены уроков, внеурочные мероприятия и многое другое.
 
-## What you can manage in the bot
+## Чем можно управлять в боте
 
-- Add, delete, and reschedule homework  
-- Add, delete, cancel, and reschedule lessons  
-- Extracurricular events and notes for specific days  
-- Change the bell schedule  
-- Change the classrooms where lessons take place  
-- Mark a day as a day off  
-- Display start and end times of lessons  
-- Record quizzes, exams, tests, and other types of assessments
+- Добавлять, удалять и переносить домашние задания  
+- Добавлять, удалять, отменять и переносить уроки  
+- Внеурочные мероприятия и заметки к конкретным дням  
+- Изменять расписание звонков  
+- Изменять кабинеты, в которых проходят уроки  
+- Отмечать день как выходной  
+- Отображать время начала и окончания уроков  
+- Фиксировать проверочные работы, экзамены, тесты и так далее
 
-## Main commands
+## Основные команды
 
-- /start — greeting and brief info  
-- /help — list of commands  
-- /site the website  
-- /today — schedule for today  
-- /tomorrow — schedule for tomorrow
+- /start — приветствие и краткая информация  
+- /help — список команд  
+- /site — ссылка на сайт  
+- /today — расписание на сегодня  
+- /tomorrow — расписание на завтра  
 
-## Running the project
+## Запуск проекта
 
-Clone the repository:  
+Клонируйте репозиторий:  
 ```bash
-git clone https://github.com/rpcot/schedly.git
+git clone https://github.com/rpcot/schedly.git  
 cd schedly
 ```
 
-### Install with Docker
-1. Build and start the containers
+### Установка с помощью Docker
+1. Соберите и запустите контейнеры  
 ```bash
-docker compose up --build -d
+docker compose up --build -d  
 ```
 
-### Install without Docker
-1. Install yarn if you don't have it:
+### Установка без Docker
+1. Установите yarn, если он у вас не установлен:  
 ```bash
-npm install --global yarn
+npm install --global yarn  
 ```
 
-2. Install dependencies:
+2. Установите зависимости:  
 ```bash
-yarn install
+yarn install  
 ```
 
-3. Start the bot:
+3. Запустите бота:  
 ```bash
-yarn start
+yarn start  
 ```
 
-4. Start the API:
+4. Запустите API:  
 ```bash
-yarn start:api
+yarn start:api  
 ```
+
+## Связанные проекты
+- SCHEDLY Frontend (https://github.com/rpcot/schedly-frontend) — Frontend сайта.
