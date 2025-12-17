@@ -8,6 +8,39 @@ const { Bot } = require('grammy');
 
 const bot = new Bot(token);
 
+const metaMap = {
+    index: {
+        title: 'Расписание — SCHEDLY',
+        description: 'Расписание уроков.',
+        keywords: 'SCHEDLY, расписание, Telegram-бот',
+    },
+    info: {
+        title: 'Информация — SCHEDLY',
+        description: 'Информация о проекте SCHEDLY — Telegram-боте для управления расписанием.',
+        keywords: 'SCHEDLY, расписание, Telegram-бот, информация, проект',
+    },
+    holidays: {
+        title: 'Каникулы — SCHEDLY',
+        description: 'Расписание и обратный отсчёт до каникул и праздников.',
+        keywords: 'SCHEDLY, расписание, Telegram-бот, каникулы, праздники',
+    },
+    updates: {
+        title: 'Обновления — SCHEDLY',
+        description: 'Список изменений бота и его сервисов.',
+        keywords: 'SCHEDLY, Telegram-бот, обновления, изменения',
+    },
+    update: {
+        title: 'Подробности обновления — SCHEDLY',
+        description: 'Подробное описание изменений обновления.',
+        keywords: 'SCHEDLY, Telegram-бот, обновления, изменения',
+    },
+    notFound: {
+        title: 'Страница не найдена — SCHEDLY',
+        description: 'Запрашиваемая страница не найдена',
+        keywords: 'SCHEDLY, расписание, Telegram-бот, информация, проект',
+    },
+};
+
 function getDefaultBells() {
     return JSON.parse(readFileSync(defaultBellsPath, 'utf-8'));
 }
@@ -201,7 +234,11 @@ const upload = multer();
 app.use(express.json());
 
 app.use(cors({
-    origin: ['https://schedule.rpcot.ru', 'https://schedly.rpcot.ru'],
+    origin: [
+        'https://schedule.rpcot.ru',
+        'https://schedly.rpcot.ru',
+        'https://schedule-old.rpcot.ru',
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 // app.use(cors());
@@ -326,6 +363,54 @@ app.get('/holidays', upload.none(), async (req, res) => {
         console.error(e);
         res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
     }
+});
+
+app.get(['/meta', '/meta/*'], (req, res) => {
+    const path = req.params[0] || '';
+
+    let metaKey = 'notFound';
+    switch (true) {
+        case path === '':
+            metaKey = 'index';
+            break;
+        case path === 'info':
+            metaKey = 'info';
+            break;
+        case path === 'holidays':
+            metaKey = 'holidays';
+            break;
+        case path === 'updates':
+            metaKey = 'updates';
+            break;
+        case path.startsWith('updates/'):
+            metaKey = 'update';
+            break;
+    }
+
+    const meta = metaMap[metaKey];
+
+    res.status(metaKey === 'notFound' ? 404 : 200)
+        .send(`<!DOCTYPE html>
+        <html lang="ru">
+            <head>
+                <meta charset="utf-8" />
+                <title>${meta.title}</title>
+
+                <meta name="theme-color" content="#0d0d0d" />
+
+                <meta property="og:locale" content="ru_RU" />
+                <meta property="og:site_name" content="SCHEDLY" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://api.rpcot.ru/images/rasp-logo" />
+
+                <meta name="description" content="${meta.description}" />
+                <meta name="keywords" content="${meta.keywords}" />
+
+                <meta property="og:title" content="${meta.title}" />
+                <meta property="og:description" content="${meta.description}" />
+            </head>
+            <body></body>
+        </html>`);
 });
 
 app.use((req, res) => res.status(404).json({ ok: false, status: 404, message: 'Не найдено' }));
