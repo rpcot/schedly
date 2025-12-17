@@ -157,6 +157,28 @@ async function getAllChangelogs() {
     });
 }
 
+async function getChangelogData(id) {
+    const changelogData = await Changelogs.findByPk(id, {
+        attributes: [
+            'id', 'version', 'title', 'type',
+            'type', 'involvedSystems', 'body',
+            'images', 'date',
+        ],
+        raw: true,
+    });
+
+    const { systems } = getChangelogsConfig();
+
+    if (!changelogData)
+        return null;
+
+    changelogData.body = changelogData.body.map((system) => {
+        return { ...system, name: systems[system.systemId].name };
+    });
+
+    return changelogData;
+}
+
 async function getAttachment(id) {
     const attachmentData = await Attachments.findByPk(id);
 
@@ -179,7 +201,7 @@ const upload = multer();
 app.use(express.json());
 
 app.use(cors({
-    origin: 'https://schedule.rpcot.ru',
+    origin: ['https://schedule.rpcot.ru', 'https://schedly.rpcot.ru'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
 // app.use(cors());
@@ -259,6 +281,26 @@ app.get('/attachment/:id', upload.none(), async (req, res) => {
 app.get('/changelogs', upload.none(), async (req, res) => {
     try {
         const data = await getAllChangelogs();
+
+        res.status(200).json({
+            ok: true,
+            status: 200,
+            data,
+        });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
+    }
+});
+
+app.get('/changelogs/:id', upload.none(), async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const data = await getChangelogData(id);
+
+        if (!data)
+            return void res.status(404).json({ ok: false, status: 404, message: 'Не найдено' });
 
         res.status(200).json({
             ok: true,
