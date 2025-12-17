@@ -373,13 +373,13 @@ app.get(['/meta', '/meta/*'], (req, res) => {
         case path === '':
             metaKey = 'index';
             break;
-        case path === 'info':
+        case path === 'info' || path === 'info/':
             metaKey = 'info';
             break;
-        case path === 'holidays':
+        case path === 'holidays' || path === 'holidays/':
             metaKey = 'holidays';
             break;
-        case path === 'updates':
+        case path === 'updates' || path === 'updates/':
             metaKey = 'updates';
             break;
         case path.startsWith('updates/'):
@@ -389,7 +389,7 @@ app.get(['/meta', '/meta/*'], (req, res) => {
 
     const meta = metaMap[metaKey];
 
-    res.status(metaKey === 'notFound' ? 404 : 200)
+    res.status(200)
         .send(`<!DOCTYPE html>
         <html lang="ru">
             <head>
