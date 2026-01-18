@@ -7,8 +7,8 @@ module.exports = {
 
         <b>🤖 Бот</b>
         • Бот: <a href="https://t.me/raspisssanie_bot">SCHEDLY</a>
-        • Версия бота: <code>v2.8.0</code>
-        • Последнее обновление: <code>04.11.2025</code>
+        • Версия бота: <code>v2.8.1</code>
+        • Последнее обновление: <code>19.01.2026</code>
 
         <b>🌐 Сайт</b>
         • Сайт: <a href="https://schedly.rpcot.ru">schedly.rpcot.ru</a>
