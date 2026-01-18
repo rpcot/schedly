@@ -36,6 +36,9 @@ module.exports = {
             const homeworkToMove = (homeworkIndex === 'all')
                 ? currentLesson.homework
                 : [currentLesson.homework[homeworkIndex]];
+                
+            if (homeworkToMove.length === 0 || !homeworkToMove[0])
+                return void await ctx.answerCallbackQuery('Не удалось найти домашнее задание\nВозможно, урок был удален или перемещен');
 
             if (targetLesson.homework.length + homeworkToMove.length > 3)
                 return void await ctx.answerCallbackQuery('Невозможно добавить больше 3-х домашних заданий');
@@ -102,7 +105,7 @@ module.exports = {
                 `Айди дня: ${dataId}`,
                 `Айди недели: ${weekId}`,
                 `Перенесенное домашнее задание:\n${homeworkToMove.join('\n')}`,
-            ])
+            ]);
 
             await showManageDay(ctx, targetData.weekId, targetData.index);
         } else if (dayOfWeek !== undefined && dayOfWeek !== NaN) {
