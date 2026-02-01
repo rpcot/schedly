@@ -66,9 +66,9 @@
             "canceled": true
         },
         {
-            "name": "Окно",
+            "name": "Классный час",
             "exam": "",
-            "cabinet": "-",
+            "cabinet": 22,
             "homework": [],
             "canceled": true
         },
@@ -110,11 +110,11 @@
             "canceled": true
         },
         {
-            "name": "Биология",
+            "name": "Окно",
             "exam": "",
-            "cabinet": 20,
+            "cabinet": "-",
             "homework": [],
-            "canceled": false
+            "canceled": true
         },
         {
             "name": "Информатика",
@@ -205,11 +205,11 @@
     ],
     [
         {
-            "name": "Окно",
+            "name": "Биология",
             "exam": "",
-            "cabinet": "-",
+            "cabinet": 20,
             "homework": [],
-            "canceled": true
+            "canceled": false
         },
         {
             "name": "Английский язык",
