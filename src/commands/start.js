@@ -3,6 +3,7 @@ const { errorAnswer } = require("../utils/utils");
 const { sendActionLog } = require("../utils/logging-functions");
 const { checkAdminPerms, getGeneralMenuKeyboard } = require("../utils/users-functions");
 const { developerId } = require("../config");
+const { getAttachment, showAttachment } = require("../utils/attachments-functions");
 
 module.exports = {
     name: 'start',
@@ -14,6 +15,12 @@ module.exports = {
             return await errorAnswer(ctx, 'Данная команда доступна <b>только</b> в личных сообщениях с ботом', {
                 deleteAfter: 5,
             });
+
+        if (ctx.match?.startsWith('attachment')) {
+            const attachmentId = ctx.match.split('_')[1];
+            await showAttachment(ctx, attachmentId);
+            return await ctx.deleteMessage().catch(() => { });
+        }
 
         let text = `<b>❤️‍🔥 Привет, я SCHEDLY!</b>
         ❓ Я <b>помогу тебе</b> с поиском актуального <b>расписания</b> и <b>домашнего задания</b>.

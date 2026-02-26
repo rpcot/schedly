@@ -24,6 +24,16 @@ const metaMap = {
         description: 'Расписание и обратный отсчёт до каникул и праздников.',
         keywords: 'SCHEDLY, расписание, Telegram-бот, каникулы, праздники',
     },
+    attachments: {
+        title: 'Вложения — SCHEDLY',
+        description: 'Список всех доступных вложений.',
+        keywords: 'SCHEDLY, расписание, Telegram-бот, вложения',
+    },
+    attachment: {
+        title: 'Вложение — SCHEDLY',
+        description: 'Подробное описание вложения.',
+        keywords: 'SCHEDLY, расписание, Telegram-бот, вложения',
+    },
     updates: {
         title: 'Обновления — SCHEDLY',
         description: 'Список изменений бота и его сервисов.',
@@ -218,6 +228,18 @@ async function getAttachment(id) {
     return attachmentData;
 }
 
+async function getAttachments({ offset = 0, limit = 20, raw = true } = {}) {
+    const data = await Attachments.findAndCountAll({
+        offset,
+        limit,
+        raw,
+        attributes: [
+            'id', 'name', 'value',
+        ],
+    });
+    return data;
+}
+
 async function getFileFromTelegram(fileId) {
     const file = await bot.api.getFile(fileId);
 
@@ -272,6 +294,31 @@ app.get('/weeks/', upload.none(), async (req, res) => {
         res.status(200).json({ ok: true, status: 200, data });
     } catch (e) {
         console.error(e);
+        res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
+    }
+});
+
+app.get('/attachments', async (req, res) => {
+    try {
+        const limit = 20;
+        const offset = parseInt(req.query.offset) || 0;
+        const { count, rows } = await getAttachments({ offset, limit, raw: true });
+        
+        const totalPages = Math.ceil(count / limit);
+        const currentPage = Math.floor(offset / limit) + 1;
+        
+        res.status(200).json({
+            ok: true,
+            status: 200,
+            data: rows,
+            meta: {
+                totalItems: count,
+                totalPages,
+                currentPage,
+            },
+        });
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ ok: false, status: 500, message: 'Внутрення ошибка сервера' });
     }
 });

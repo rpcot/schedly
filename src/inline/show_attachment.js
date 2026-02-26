@@ -25,7 +25,7 @@ module.exports = {
         if (attachmentId) {
             await ctx.answerCallbackQuery();
 
-            await showAttachment(ctx, lessonData, attachmentId);
+            await showAttachment(ctx, attachmentId, { lessonData });
         } else if (!isNaN(lessonIndex)) {
             if (!lessonData.attachments?.length)
                 return void ctx.answerCallbackQuery('У данного урока нет вложений.');

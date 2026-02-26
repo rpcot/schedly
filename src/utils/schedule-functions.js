@@ -1,5 +1,5 @@
 const { InlineKeyboard } = require('grammy');
-const { dayNames, defaultLessonsSchedulePath, defaultBellsPath, defaultLessonsPath, subgroupsPath } = require('../config');
+const { dayNames, defaultLessonsSchedulePath, defaultBellsPath, defaultLessonsPath, subgroupsPath, botStartUrl } = require('../config');
 const { Days, Weeks } = require('../models');
 const { getSettings } = require('./settings-functions');
 const { getTimestampFromDate, getTimestamp, plural, errorAnswer } = require('./utils');
@@ -122,7 +122,7 @@ function getDayScheduleText(data, dayOfWeek) {
             let lessonText = `\n${index + 1}. <b>${bells[index]} ${lesson.name}</b> (${cabinet}): ${homework}`;
 
             if (lesson.attachments?.length) {
-                lessonText += `\n└─ ${lesson.attachments.length} ${plural(lesson.attachments.length, ['вложение', 'вложения', 'вложений'])}`;
+                lessonText += `\n└─ ${lesson.attachments.map((attachment) => `<a href="${botStartUrl}attachment_${attachment.id}">${attachment.name}</a>`).join(' • ')}`;
             }
 
             if (lesson.exam) {

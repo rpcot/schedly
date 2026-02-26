@@ -126,7 +126,7 @@ async function getAttachmentValueFromCtx(ctx) {
     return value;
 }
 
-async function showAttachment(ctx, lessonData, attachmentId) {
+async function showAttachment(ctx, attachmentId, { lessonData } = {}) {
     const bot = require('../');
 
     const inline = new InlineKeyboard()
@@ -139,9 +139,11 @@ async function showAttachment(ctx, lessonData, attachmentId) {
         });
     }
 
-    const title = `[<code>${attachmentData.id}</code>] <b>${attachmentData.name || `Вложение ${attachmentData.id}`}</b>
-    • Добавлено ${attachmentData.createdAt.toLocaleString('ru-RU')}
-    • Относится к уроку ${lessonData.name}`.replace(/  +/g, '');
+    let title = `[<code>${attachmentData.id}</code>] <b>${attachmentData.name || `Вложение ${attachmentData.id}`}</b>
+    • Добавлено ${attachmentData.createdAt.toLocaleString('ru-RU')}`.replace(/  +/g, '');
+    if (lessonData) {
+        title += `\n• Относится к уроку ${lessonData.name}`;
+    }
 
     try {
         if (attachmentData.value.type === 'link') {
