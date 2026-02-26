@@ -20,6 +20,7 @@ module.exports = {
     apiPort: API_PORT,
     weekUrlTemplate: '', // URL template for generating schedule links by week number, e.g. https://schedly.rpcot.ru?week=
     attachmentUrlTemplate: '', // URL template for generating attachment links by attachment id, e.g. https://api.schedule.rpcot.ru/attachment/
+    botStartUrl: '', // URL for generating start link, e.g. https://t.me/ExampleBot/?start=
 
     giga: {
         key: GIGA_CHAT_KEY,
