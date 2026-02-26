@@ -7,8 +7,8 @@ module.exports = {
 
         <b>🤖 Бот</b>
         • Бот: <a href="https://t.me/raspisssanie_bot">SCHEDLY</a>
-        • Версия бота: <code>v2.8.1</code>
-        • Последнее обновление: <code>19.01.2026</code>
+        • Версия бота: <code>v2.9.0</code>
+        • Последнее обновление: <code>26.02.2026</code>
 
         <b>🌐 Сайт</b>
         • Сайт: <a href="https://schedly.rpcot.ru">schedly.rpcot.ru</a>
@@ -17,8 +17,8 @@ module.exports = {
         
         <b>🧩 API</b>
         • API: <a href="https://api.schedule.rpcot.ru">api.schedule.rpcot.ru</a>
-        • Версия API: <code>v2.5.1</code>
-        • Последнее обновление: <code>17.12.2025</code>
+        • Версия API: <code>v2.6.0</code>
+        • Последнее обновление: <code>26.02.2026</code>
 
         <b>🛠 Стек технологий</b>
         • Язык программирования: <code>JavaScript</code>
