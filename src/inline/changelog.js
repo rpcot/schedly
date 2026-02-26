@@ -68,6 +68,8 @@ module.exports = {
 
             if (systemItems.length === 0)
                 return void await ctx.answerCallbackQuery('Нужно добавить хотя бы 1 изменение');
+
+            await setWait(ctx.from.id, {});
         } else if (action === 'add_image') {
             await setWait(ctx.from.id, {
                 id: 'changelog_add_image_name',
@@ -98,5 +100,7 @@ module.exports = {
         updateTempChangelogEntry(tempChangelogId, data);
 
         await showTempChangelog(ctx, data);
+        
+        await setWait(ctx.from.id, {});
     }
 };
