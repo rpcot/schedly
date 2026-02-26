@@ -15,6 +15,7 @@ async function sendActionLog(ctx, text, params = []) {
 
         await ctx.api.sendMessage(loggingChannelId, messageText, {
             parse_mode: 'HTML',
+            disable_notification: true,
         });
     } catch (error) {
         bot.logger.error(`Возникла ошибка при логировании действия:\n${error.stack}\n`, { ctx, text, params });
@@ -93,6 +94,7 @@ async function sendGigaChatActionLog(ctx, text, suggestId, initiator, params = [
 
         await ctx.api.sendMessage(loggingChannelId, messageText, {
             parse_mode: 'HTML',
+            disable_notification: true,
         });
     } catch (error) {
         bot.logger.error(`Возникла ошибка при логировании действия GigaChat:\n${error.stack}\n`, { ctx, text, params });
@@ -119,6 +121,7 @@ async function sendGigaChatSuggestDecline(ctx, targetDay, suggestData, initiator
 
         await ctx.api.sendMessage(loggingChannelId, text, {
             parse_mode: 'HTML',
+            disable_notification: true,
         });
     } catch (error) {
         bot.logger.error(`Возникла ошибка при отправке лога отклонения предложения GigaChat:\n${error.stack}`, { suggestData });
@@ -145,6 +148,7 @@ async function sendGigaChatSuggestSended(ctx, targetDay, suggestData, initiator)
 
         await ctx.api.sendMessage(loggingChannelId, text, {
             parse_mode: 'HTML',
+            disable_notification: true,
         });
     } catch (error) {
         bot.logger.error(`Возникла ошибка при отправке лога отклонения предложения GigaChat:\n${error.stack}`, { suggestData });
