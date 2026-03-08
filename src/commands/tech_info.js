@@ -12,8 +12,8 @@ module.exports = {
 
         <b>🌐 Сайт</b>
         • Сайт: <a href="https://schedly.rpcot.ru">schedly.rpcot.ru</a>
-        • Версия сайта: <code>v3.2.0</code>
-        • Последнее обновление: <code>19.01.2026</code>
+        • Версия сайта: <code>v3.2.1</code>
+        • Последнее обновление: <code>08.03.2026</code>
         
         <b>🧩 API</b>
         • API: <a href="https://api.schedule.rpcot.ru">api.schedule.rpcot.ru</a>
