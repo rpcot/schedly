@@ -5,7 +5,7 @@
             "exam": "",
             "cabinet": "20",
             "homework": [],
-            "canceled": true
+            "canceled": false
         },
         {
             "name": "Финансовая грамотность",
@@ -63,7 +63,7 @@
             "exam": "",
             "cabinet": 36,
             "homework": [],
-            "canceled": true
+            "canceled": false
         },
         {
             "name": "Литература",
@@ -107,14 +107,14 @@
             "exam": "",
             "cabinet": 36,
             "homework": [],
-            "canceled": true
+            "canceled": false
         },
         {
             "name": "Алгебра",
             "exam": "",
             "cabinet": 43,
             "homework": [],
-            "canceled": true
+            "canceled": false
         },
         {
             "name": "География",
@@ -153,6 +153,13 @@
         }
     ],
     [
+        {
+            "name": "Окно",
+            "exam": "",
+            "cabinet": "-",
+            "homework": [],
+            "canceled": true
+        },
         {
             "name": "ОБЗР",
             "exam": "",
