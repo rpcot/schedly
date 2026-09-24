@@ -12,17 +12,17 @@
     {
         "id": "geometry",
         "name": "Геометрия",
-        "cabinet": 40
+        "cabinet": 43
     },
     {
         "id": "algebra",
         "name": "Алгебра",
-        "cabinet": 40
+        "cabinet": 43
     },
     {
         "id": "pprmz",
         "name": "ППРМЗ",
-        "cabinet": 40
+        "cabinet": 43
     },
     {
         "id": "literature",
@@ -76,7 +76,8 @@
     },
     {
         "id": "obzr",
-        "name": "ОБЗР"
+        "name": "ОБЗР",
+        "cabinet": "-"
     },
     {
         "id": "geography",
@@ -96,12 +97,7 @@
     {
         "id": "probabilityTheory",
         "name": "Теория вероятности",
-        "cabinet": 40
-    },
-    {
-        "id": "projectActivity",
-        "name": "Проектная деятельность",
-        "cabinet": 36
+        "cabinet": 43
     },
     {
         "id": "window",
