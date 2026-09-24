@@ -262,6 +262,8 @@ async function createNewWeek(weekIndex, { weekOffset = 0 } = {}) {
             : 'default';
 
         await Days.create({
+            // если день суббота - это выходной
+            holiday: dayIndex === 5,
             index: dayIndex,
             lessons: defaultLessonsSchedule[dayIndex],
             weekId: week.id,
